@@ -23,7 +23,6 @@
     "@ethersproject/abi": "^5.4.0",
     "@ethersproject/abstract-signer": "^5.4.0",
     "@ethersproject/address": "^5.4.0",
-    "@ethersproject/bignumber": "^5.4.0",
     "@ethersproject/bytes": "^5.4.0",
     "@ethersproject/constants": "^5.4.0",
     "@ethersproject/contracts": "^5.4.0",
