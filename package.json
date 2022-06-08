@@ -20,6 +20,7 @@
     "react-error-overlay": "6.0.9"
   },
   "dependencies": {
+    "@ethersproject/providers": "^5.1.0",
     "@alch/alchemy-web3": "^1.4.2",
     "@ant-design/icons": "^4.6.2",
     "@balancer-labs/sdk": "^0.1.12",
