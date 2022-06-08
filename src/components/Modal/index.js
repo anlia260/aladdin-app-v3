@@ -1,0 +1,18 @@
+import React from 'react'
+import cn from 'classnames'
+import CloseIcon from 'assets/close.svg'
+import styles from './styles.module.scss'
+
+export default function Modal(props) {
+  const { children, onCancel, width, overflowVisible } = props
+  return (
+    <div className={styles.modalWrapper}>
+      <div className={styles.modal} style={{ width }}>
+        <span className={styles.close} onClick={onCancel}>
+          <img src={CloseIcon} className="w-6" />
+        </span>
+        <div className={cn(styles.modalContent, overflowVisible && styles.overflowVisible)}>{children}</div>
+      </div>
+    </div>
+  )
+}

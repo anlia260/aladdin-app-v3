@@ -1,0 +1,436 @@
+[
+  { "name": "CRV", "depositInfo": {}, "apy": { "current": 0, "project": "44.7%" }, "token": "CRV" },
+  {
+    "name": "Compound",
+    "depositInfo": { "name": "CurveCompoundpool", "url": "https://curve.fi/compound/deposit" },
+    "apy": { "current": "4.41%", "project": "4.36%" },
+    "token": "cCrv"
+  },
+  {
+    "name": "USDT",
+    "depositInfo": { "name": "CurveUSDTpool", "url": "https://curve.fi/usdt/deposit" },
+    "apy": { "current": "1.71%", "project": "1.73%" },
+    "token": "tCrv"
+  },
+  {
+    "name": "Y",
+    "depositInfo": { "name": "CurveYpool", "url": "https://curve.fi/iearn/deposit" },
+    "apy": { "current": "3.61%", "project": "2.67%" },
+    "token": "yCrv"
+  },
+  {
+    "name": "BUSD",
+    "depositInfo": { "name": "CurveBUSDpool", "url": "https://curve.fi/busd/deposit" },
+    "apy": { "current": "4.64%", "project": "3.31%" },
+    "token": "bCrv"
+  },
+  {
+    "name": "sUSD",
+    "depositInfo": { "name": "CurvesUSDpool", "url": "https://curve.fi/susdv2/deposit" },
+    "apy": { "current": "6.69%", "project": "6.16%" },
+    "token": "sCrv"
+  },
+  {
+    "name": "PAX",
+    "depositInfo": { "name": "CurvePAXpool", "url": "https://curve.fi/pax/deposit" },
+    "apy": { "current": "0.22%", "project": "1.26%" },
+    "token": "pCrv"
+  },
+  {
+    "name": "ren",
+    "depositInfo": { "name": "Curverenpool", "url": "https://curve.fi/ren/deposit" },
+    "apy": { "current": "0.02%", "project": "0.33%" },
+    "token": "renCrv"
+  },
+  {
+    "name": "sbtc",
+    "depositInfo": { "name": "Curvesbtcpool", "url": "https://curve.fi/sbtc/deposit" },
+    "apy": { "current": "0.06%", "project": "0.16%" },
+    "token": "sbtcCrv"
+  },
+  {
+    "name": "hbtc",
+    "depositInfo": { "name": "Curvehbtcpool", "url": "https://curve.fi/hbtc/deposit" },
+    "apy": { "current": "1.6%", "project": "1.52%" },
+    "token": "hbtcCrv"
+  },
+  {
+    "name": "3pool",
+    "depositInfo": { "name": "Curve3poolpool", "url": "https://curve.fi/3pool/deposit" },
+    "apy": { "current": "1.48%", "project": "1.46%" },
+    "token": "3poolCrv"
+  },
+  {
+    "name": "gusd",
+    "depositInfo": { "name": "Curvegusdpool", "url": "https://curve.fi/gusd/deposit" },
+    "apy": { "current": "3.52%", "project": "3.5%" },
+    "token": "gusdCrv"
+  },
+  {
+    "name": "husd",
+    "depositInfo": { "name": "Curvehusdpool", "url": "https://curve.fi/husd/deposit" },
+    "apy": { "current": "0.1%", "project": "14.96%" },
+    "token": "husdCrv"
+  },
+  {
+    "name": "usdk",
+    "depositInfo": { "name": "Curveusdkpool", "url": "https://curve.fi/usdk/deposit" },
+    "apy": { "current": "0.96%", "project": "6.72%" },
+    "token": "usdkCrv"
+  },
+  {
+    "name": "usdn",
+    "depositInfo": { "name": "Curveusdnpool", "url": "https://curve.fi/usdn/deposit" },
+    "apy": { "current": "11.9%", "project": "11.83%" },
+    "token": "usdnCrv"
+  },
+  {
+    "name": "musd",
+    "depositInfo": { "name": "Curvemusdpool", "url": "https://curve.fi/musd/deposit" },
+    "apy": { "current": "6.15%", "project": "5.99%" },
+    "token": "musdCrv"
+  },
+  {
+    "name": "rsv",
+    "depositInfo": { "name": "Curversvpool", "url": "https://curve.fi/rsv/deposit" },
+    "apy": { "current": "0.1%", "project": "0.1%" },
+    "token": "rsvCrv"
+  },
+  {
+    "name": "tbtc",
+    "depositInfo": { "name": "Curvetbtcpool", "url": "https://curve.fi/tbtc/deposit" },
+    "apy": { "current": "1.05%", "project": "0.95%" },
+    "token": "tbtcCrv"
+  },
+  {
+    "name": "dusd",
+    "depositInfo": { "name": "Curvedusdpool", "url": "https://curve.fi/dusd/deposit" },
+    "apy": { "current": "0.07%", "project": "2.93%" },
+    "token": "dusdCrv"
+  },
+  {
+    "name": "pbtc",
+    "depositInfo": { "name": "Curvepbtcpool", "url": "https://curve.fi/pbtc/deposit" },
+    "apy": { "current": "0.02%", "project": "2.94%" },
+    "token": "pbtcCrv"
+  },
+  {
+    "name": "bbtc",
+    "depositInfo": { "name": "Curvebbtcpool", "url": "https://curve.fi/bbtc/deposit" },
+    "apy": { "current": "0.31%", "project": "0.13%" },
+    "token": "bbtcCrv"
+  },
+  {
+    "name": "obtc",
+    "depositInfo": { "name": "Curveobtcpool", "url": "https://curve.fi/obtc/deposit" },
+    "apy": { "current": "1.82%", "project": "1.42%" },
+    "token": "obtcCrv"
+  },
+  {
+    "name": "ust",
+    "depositInfo": { "name": "Curveustpool", "url": "https://curve.fi/ust/deposit" },
+    "apy": { "current": "5.72%", "project": "5.76%" },
+    "token": "ustCrv"
+  },
+  {
+    "name": "eurs",
+    "depositInfo": { "name": "Curveeurspool", "url": "https://curve.fi/eurs/deposit" },
+    "apy": { "current": "4.18%", "project": "4.03%" },
+    "token": "eursCrv"
+  },
+  {
+    "name": "seth",
+    "depositInfo": { "name": "Curvesethpool", "url": "https://curve.fi/seth/deposit" },
+    "apy": { "current": "2.52%", "project": "2.31%" },
+    "token": "eCrv"
+  },
+  {
+    "name": "aave",
+    "depositInfo": { "name": "Curveaavepool", "url": "https://curve.fi/aave/deposit" },
+    "apy": { "current": "3.69%", "project": "3.23%" },
+    "token": "a3Crv"
+  },
+  {
+    "name": "steth",
+    "depositInfo": { "name": "Curvestethpool", "url": "https://curve.fi/steth/deposit" },
+    "apy": { "current": "5.16%", "project": "5.22%" },
+    "token": "stethCrv"
+  },
+  {
+    "name": "saave",
+    "depositInfo": { "name": "Curvesaavepool", "url": "https://curve.fi/saave/deposit" },
+    "apy": { "current": "1.54%", "project": "1.86%" },
+    "token": "saCrv"
+  },
+  {
+    "name": "ankreth",
+    "depositInfo": { "name": "Curveankrethpool", "url": "https://curve.fi/ankreth/deposit" },
+    "apy": { "current": "2.89%", "project": "3.8%" },
+    "token": "aethCrv"
+  },
+  {
+    "name": "usdp",
+    "depositInfo": { "name": "Curveusdppool", "url": "https://curve.fi/usdp/deposit" },
+    "apy": { "current": "9.49%", "project": "9.02%" },
+    "token": "usdpCrv"
+  },
+  {
+    "name": "ironbank",
+    "depositInfo": { "name": "Curveironbankpool", "url": "https://curve.fi/ib/deposit" },
+    "apy": { "current": "4.94%", "project": "4.9%" },
+    "token": "ib3Crv"
+  },
+  {
+    "name": "link",
+    "depositInfo": { "name": "Curvelinkpool", "url": "https://curve.fi/link/deposit" },
+    "apy": { "current": "0.65%", "project": "0.33%" },
+    "token": "linkCrv"
+  },
+  {
+    "name": "tusd",
+    "depositInfo": { "name": "Curvetusdpool", "url": "https://curve.fi/tusd/deposit" },
+    "apy": { "current": "1.5%", "project": "1.34%" },
+    "token": "tusdCrv"
+  },
+  {
+    "name": "frax",
+    "depositInfo": { "name": "Curvefraxpool", "url": "https://curve.fi/frax/deposit" },
+    "apy": { "current": "5.56%", "project": "5.44%" },
+    "token": "fraxCrv"
+  },
+  {
+    "name": "lusd",
+    "depositInfo": { "name": "Curvelusdpool", "url": "https://curve.fi/lusd/deposit" },
+    "apy": { "current": "4.98%", "project": "4.76%" },
+    "token": "lusdCrv"
+  },
+  {
+    "name": "busdv2",
+    "depositInfo": { "name": "Curvebusdv2pool", "url": "https://curve.fi/busdv2/deposit" },
+    "apy": { "current": "0.06%", "project": "3.24%" },
+    "token": "busdCrv"
+  },
+  {
+    "name": "reth",
+    "depositInfo": { "name": "Curverethpool", "url": "https://curve.fi/reth/deposit" },
+    "apy": { "current": "1.11%", "project": "1.16%" },
+    "token": "rethCrv"
+  },
+  {
+    "name": "alusd",
+    "depositInfo": { "name": "Curvealusdpool", "url": "https://curve.fi/alusd/deposit" },
+    "apy": { "current": "6.15%", "project": "6.03%" },
+    "token": "alusdCrv"
+  },
+  {
+    "name": "mim",
+    "depositInfo": { "name": "Curvemimpool", "url": "https://curve.fi/mim/deposit" },
+    "apy": { "current": "8.63%", "project": "9.58%" },
+    "token": "mimCrv"
+  },
+  {
+    "name": "cvxcrv",
+    "depositInfo": { "name": "Curvecvxcrvpool", "url": "https://curve.fi/factory/22/deposit" },
+    "apy": { "current": "40.81%", "project": "40.62%" },
+    "token": "cvxcrvCrv"
+  },
+  {
+    "name": "FixedForex:JPY",
+    "depositInfo": { "name": "CurveFixedForex:JPYpool", "url": "https://curve.fi/factory/28/deposit" },
+    "apy": { "current": "12.79%", "project": "12.33%" },
+    "token": "f-ibjpyCrv"
+  },
+  {
+    "name": "FixedForex:GBP",
+    "depositInfo": { "name": "CurveFixedForex:GBPpool", "url": "https://curve.fi/factory/30/deposit" },
+    "apy": { "current": "14.17%", "project": "14.43%" },
+    "token": "f-ibgbpCrv"
+  },
+  {
+    "name": "FixedForex:AUD",
+    "depositInfo": { "name": "CurveFixedForex:AUDpool", "url": "https://curve.fi/factory/29/deposit" },
+    "apy": { "current": "14.93%", "project": "14.47%" },
+    "token": "f-ibaudCrv"
+  },
+  {
+    "name": "FixedForex:EUR",
+    "depositInfo": { "name": "CurveFixedForex:EURpool", "url": "https://curve.fi/factory/3/deposit" },
+    "apy": { "current": "6.65%", "project": "6.67%" },
+    "token": "f-ibeurCrv"
+  },
+  {
+    "name": "FixedForex:CHF",
+    "depositInfo": { "name": "CurveFixedForex:CHFpool", "url": "https://curve.fi/factory/31/deposit" },
+    "apy": { "current": "10.08%", "project": "9.79%" },
+    "token": "f-ibchfCrv"
+  },
+  {
+    "name": "FixedForex:KRW",
+    "depositInfo": { "name": "CurveFixedForex:KRWpool", "url": "https://curve.fi/factory/2/deposit" },
+    "apy": { "current": "13.24%", "project": "12.09%" },
+    "token": "f-ibkrwCrv"
+  },
+  {
+    "name": "alETH",
+    "depositInfo": { "name": "CurvealETHpool", "url": "https://curve.fi/factory/38/deposit" },
+    "apy": { "current": "4.18%", "project": "4.13%" },
+    "token": "alethCrv"
+  },
+  {
+    "name": "eurn",
+    "depositInfo": { "name": "Curveeurnpool", "url": "https://curve.fi/factory/33/deposit" },
+    "apy": { "current": "11.67%", "project": "8.95%" },
+    "token": "eurnCrv"
+  },
+  { "name": "usdm", "depositInfo": { "name": "", "url": "" }, "apy": { "current": "–", "project": "-" }, "token": "usdmCrv" },
+  {
+    "name": "mim-ust",
+    "depositInfo": { "name": "Curvemim-ustpool", "url": "https://curve.fi/factory/48/deposit" },
+    "apy": { "current": "10.21%", "project": "10.11%" },
+    "token": "mimustCrv"
+  },
+  {
+    "name": "ibBTC",
+    "depositInfo": { "name": "CurveibBTCpool", "url": "https://curve.fi/factory/60/deposit" },
+    "apy": { "current": "0.079%", "project": "0.066%" },
+    "token": "ibbtcCrv"
+  },
+  {
+    "name": "eursusd",
+    "depositInfo": { "name": "Curveeursusdpool", "url": "https://curve.fi/eursusd/deposit" },
+    "apy": { "current": "9.63%", "project": "6.11%" },
+    "token": "eursusdCrv"
+  },
+  {
+    "name": "eurtusd",
+    "depositInfo": { "name": "Curveeurtusdpool", "url": "https://curve.fi/eurtusd/deposit" },
+    "apy": { "current": "6.09%", "project": "5.82%" },
+    "token": "eurtusdCrv"
+  },
+  {
+    "name": "ousd",
+    "depositInfo": { "name": "Curveousdpool", "url": "https://curve.fi/factory/9/deposit" },
+    "apy": { "current": "4.2%", "project": "4.18%" },
+    "token": "ousdCrv"
+  },
+  {
+    "name": "paxos-dollar",
+    "depositInfo": { "name": "Curvepaxos-dollarpool", "url": "https://curve.fi/factory/59/deposit" },
+    "apy": { "current": "6.27%", "project": "5.69%" },
+    "token": "paxosusdCrv"
+  },
+  {
+    "name": "d3pool",
+    "depositInfo": { "name": "Curved3poolpool", "url": "https://curve.fi/factory/57/deposit" },
+    "apy": { "current": "7.19%", "project": "7.09%" },
+    "token": "d3poolCrv"
+  },
+  {
+    "name": "ust-wormhole",
+    "depositInfo": { "name": "Curveust-wormholepool", "url": "https://curve.fi/factory/53/deposit" },
+    "apy": { "current": "10.14%", "project": "10.13%" },
+    "token": "ustwCrv"
+  },
+  {
+    "name": "3eur-pool",
+    "depositInfo": { "name": "Curve3eur-poolpool", "url": "https://curve.fi/factory/66/deposit" },
+    "apy": { "current": "6.93%", "project": "6.85%" },
+    "token": "3eurCrv"
+  },
+  {
+    "name": "crveth",
+    "depositInfo": { "name": "Curvecrvethpool", "url": "https://curve.fi/crveth/deposit" },
+    "apy": { "current": "34.65%", "project": "32.16%" },
+    "token": "crvethCrv"
+  },
+  {
+    "name": "dola",
+    "depositInfo": { "name": "Curvedolapool", "url": "https://curve.fi/factory/27/deposit" },
+    "apy": { "current": "33.55%", "project": "5.32%" },
+    "token": "dolaCrv"
+  },
+  {
+    "name": "rai",
+    "depositInfo": { "name": "Curveraipool", "url": "https://curve.fi/rai/deposit" },
+    "apy": { "current": "NaN%", "project": "NaN%" },
+    "token": "raiCrv"
+  },
+  {
+    "name": "cvxeth",
+    "depositInfo": { "name": "Curvecvxethpool", "url": "https://curve.fi/cvxeth/deposit" },
+    "apy": { "current": "33.39%", "project": "33.06%" },
+    "token": "cvxethCrv"
+  },
+  {
+    "name": "xautusd",
+    "depositInfo": { "name": "Curvexautusdpool", "url": "https://curve.fi/xautusd/deposit" },
+    "apy": { "current": "8.6%", "project": "8.63%" },
+    "token": "xautusdCrv"
+  },
+  {
+    "name": "spelleth",
+    "depositInfo": { "name": "Curvespellethpool", "url": "https://curve.fi/spelleth/deposit" },
+    "apy": { "current": "57.63%", "project": "51.79%" },
+    "token": "spellethCrv"
+  },
+  {
+    "name": "teth",
+    "depositInfo": { "name": "Curvetethpool", "url": "https://curve.fi/teth/deposit" },
+    "apy": { "current": "32.55%", "project": "32.24%" },
+    "token": "tethCrv"
+  },
+  {
+    "name": "yfieth",
+    "depositInfo": { "name": "Curveyfiethpool", "url": "https://curve.fi/factory-crypto/8/deposit" },
+    "apy": { "current": "22.32%", "project": "13.84%" },
+    "token": "yfiethCrv"
+  },
+  {
+    "name": "fxseth",
+    "depositInfo": { "name": "Curvefxsethpool", "url": "https://curve.fi/factory-crypto/3/deposit" },
+    "apy": { "current": "17.54%", "project": "1.74%" },
+    "token": "fxsethCrv"
+  },
+  {
+    "name": "ageuribeur",
+    "depositInfo": { "name": "Curveageuribeurpool", "url": "https://curve.fi/factory/78/deposit" },
+    "apy": { "current": "13.7%", "project": "18.81%" },
+    "token": "ageuribeurCrv"
+  },
+  {
+    "name": "fei",
+    "depositInfo": { "name": "Curvefeipool", "url": "https://curve.fi/factory/11/deposit" },
+    "apy": { "current": "3.6%", "project": "4.3%" },
+    "token": "feiCrv"
+  },
+  {
+    "name": "cvxfxs",
+    "depositInfo": { "name": "Curvecvxfxspool", "url": "https://curve.fi/factory-crypto/18/deposit" },
+    "apy": { "current": "29.28%", "project": "29.28%" },
+    "token": "cvxfxsCrv"
+  },
+  {
+    "name": "RocketPoolETH",
+    "depositInfo": { "name": "CurveRocketPoolETHpool", "url": "https://curve.fi/factory/89/deposit" },
+    "apy": { "current": "1.61%", "project": "1.61%" },
+    "token": "rocketethwstethCrv"
+  },
+  {
+    "name": "tricrypto",
+    "depositInfo": { "name": "", "url": "" },
+    "apy": { "current": "–", "project": "-" },
+    "token": "3CrvCrypto"
+  },
+  {
+    "name": "tricrypto2",
+    "depositInfo": { "name": "Curvetricrypto2pool", "url": "https://curve.fi/tricrypto2/deposit" },
+    "apy": { "current": "16.26%", "project": "16.21%" },
+    "token": "3CrvCrypto2"
+  },
+  {
+    "name": "eurt",
+    "depositInfo": { "name": "Curveeurtpool", "url": "https://curve.fi/eurt/deposit" },
+    "apy": { "current": "0%", "project": "0%" },
+    "token": "eurtCrv"
+  }
+]

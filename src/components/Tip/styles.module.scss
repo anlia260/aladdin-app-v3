@@ -1,0 +1,41 @@
+@import "../../mixins.scss";
+
+
+.tip{
+    position: relative;
+    display: inline-block;
+    vertical-align: center;
+   
+    &:hover{
+        .title{
+            display: block;
+        }
+    }
+}
+
+.icon{
+    color: #fff;
+    width: 18px;
+    height: 18px;
+}
+
+.title{
+    position: absolute;
+    z-index: 400;
+    top: 24px;
+    left: 0;
+    display: none;
+    width: 360px;
+    padding: 16px;
+    border-radius: 16px;
+    background: #fff;
+    color: $blue;
+    &.top{
+        bottom: 24px;
+        top: unset;
+    }
+    // default
+    &.bottom{
+
+    }
+}

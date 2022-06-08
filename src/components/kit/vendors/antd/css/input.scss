@@ -1,0 +1,84 @@
+// Import mixins
+@import 'components/mixins.scss';
+
+.ant-input {
+  border-radius: 8px;
+  border: none !important;
+  background: transparent !important;
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: $primary;
+  }
+}
+
+.ant-input-affix-wrapper {
+  border-top-left-radius: 5px !important;
+  border-bottom-left-radius: 5px !important;
+  border: 1px solid #d1dbe3 !important;
+  border-right: none !important;
+  background: #fbfafa !important;
+  &:hover,
+  &:focus,
+  &:active {
+    .ant-input:not(.ant-input-disabled) {
+      border-color: $primary;
+    }
+  }
+}
+
+.ant-input-group-addon {
+  background: #fbfafa !important;
+  border-top-right-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+  border: 1px solid #d1dbe3 !important;
+  border-left: none !important;
+  &::before {
+    content: '|';
+    color: #d1dbe3;
+    display: inline-block;
+    margin-right: 6px;
+  }
+}
+
+.ant-input-disabled {
+  background: rgba(232, 232, 239, 0.3) !important;
+  border-top-left-radius: 20px !important;
+  border-bottom-left-radius: 20px !important;
+}
+////////////////////////////////////////////////////////////////////////////////////////////
+// DARK THEME STYLES
+[data-kit-theme='dark'] {
+  .ant-input-group-addon {
+    border: none !important;
+    // border-left: none !important;
+    background: #fbfafa !important;
+    &::before {
+      color: #424560;
+    }
+  }
+  .ant-input {
+    background: transparent;
+    color: #969696;
+    &[disabled] {
+      color: #c7c7c7;
+    }
+    &-number {
+      &-handler {
+        &-wrap {
+          background: $dark-gray-3;
+        }
+      }
+    }
+  }
+  .ant-input-affix-wrapper {
+    border: none !important;
+
+    // border: 1px solid #d1dbe3 !important;
+    // border-right: none !important;
+    background: #fbfafa !important;
+  }
+  .ant-input-disabled {
+    background: #fbfafa !important;
+  }
+}

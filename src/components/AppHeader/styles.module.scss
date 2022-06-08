@@ -1,0 +1,78 @@
+.appHeader {
+  background: #020e2d;
+}
+
+.logo {
+  width: 160px;
+}
+
+.connectedWrapper {
+  position: relative;
+  z-index: 1000000000;
+  &:hover {
+    .menus {
+      display: block;
+    }
+  }
+  .menus {
+    display: none;
+    position: absolute;
+    top: 48px;
+    left: 0;
+    right: 0;
+    color: #41b6e4;
+    text-align: center;
+    .menu {
+      background: #062a72;
+      padding: 12px 0;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.03s;
+      &:hover {
+        background: #1a4caf;
+      }
+    }
+  }
+}
+
+.link {
+  color: #00b2ff;
+  font-size: 20px;
+  &.active {
+    font-weight: 600;
+  }
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  li {
+    display: inline-block;
+    margin-right: 44px;
+    font-weight: 100;
+  }
+}
+
+@media (max-width: 992px) {
+  ul {
+    li {
+      margin-right: 16px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .link {
+    font-size: 14px;
+  }
+  .logo {
+    width: 100px;
+  }
+
+  ul {
+    li {
+      margin-right: 8px;
+    }
+  }
+}

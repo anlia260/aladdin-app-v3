@@ -1,0 +1,61 @@
+@import "../../mixins.scss";
+
+.selectWrapper {
+  margin: 16px auto;
+  z-index: 200;
+  position: relative;
+  .selectTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+  }
+  .selectBox {
+    position: relative;
+    background: #062a72;
+    padding: 0 24px;
+  }
+
+  .select {
+    cursor: pointer;
+    color: #fff;
+    width: 100%;
+    color: #41b6e4;
+    background: #062a72;
+    border: none;
+    outline: none;
+    // padding-left: 8px;
+    box-sizing: border-box;
+    appearance: none;
+    height: 52px;
+    cursor: pointer;
+  }
+  .options {
+    cursor: pointer;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 52px;
+    transition: opacity 0.03s;
+    opacity: 0;
+    visibility: hidden;
+    background: #062a72;
+    padding: 0 16px;
+    &.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  .option {
+    border-top: 1px solid #000014;
+    padding: 12px 8px;
+    background: #062a72;
+    // transition: background .03s;
+    &:hover {
+      background: #1a4caf;
+    }
+  }
+  .selectBottom {
+    margin-top: 2px;
+  }
+}

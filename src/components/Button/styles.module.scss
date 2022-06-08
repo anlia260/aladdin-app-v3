@@ -1,0 +1,48 @@
+.lightBlue {
+    color: #020e2d;
+    padding: 10px 24px;
+    font-size: 18px;
+    background: linear-gradient(to bottom, #5aceff, #2a99ff);
+    &:disabled {
+        cursor: not-allowed;
+    }
+    &:hover {
+        color: #304680;
+    }
+}
+
+.deepBlue {
+    color: #5ad0ff;
+    padding: 10px 24px;
+    font-size: 18px;
+    background: linear-gradient(to bottom, #003ed4, #032165);
+    &:disabled {
+        cursor: not-allowed;
+    }
+    &:hover {
+        color: #4eb0d6;
+    }
+}
+
+
+.plain {
+    color: #5ad0ff;
+    padding: 10px 24px;
+    font-size: 18px;
+    background: linear-gradient(to bottom, #015cea, #2728e3);
+    &:disabled {
+        cursor: not-allowed;
+    }
+    &:hover {
+        color: #4eb0d6;
+    }
+}
+
+
+
+@media (max-width: 768px) {
+    .lightBlue, .deepBlue {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+}

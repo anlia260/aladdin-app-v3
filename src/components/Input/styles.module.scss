@@ -1,0 +1,48 @@
+@import "../../mixins.scss";
+
+.inputWrapper {
+  margin: 16px auto;
+  .inputTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  input {
+    margin: 12px 0;
+    height: 44px;
+    color: #fff;
+    width: 100%;
+    background: rgba(2, 30, 83, 0.8);
+    border: none;
+    outline: none;
+    padding-left: 20px;
+    box-sizing: border-box;
+    &::placeholder {
+      color: #41b6e4;
+    }
+  }
+ 
+  .percents {
+    display: flex;
+    border: 1px solid $lightBlue;
+    .percent {
+      color: $lightBlue;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-right: 1px solid $lightBlue;
+      &.active {
+        color: #fff;
+        background: $lightBlue;
+      }
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+  .zapTitle{
+    
+  }
+
+  // .inputBottom {
+  // }
+}

@@ -1,0 +1,15 @@
+@import "../../../../mixins.scss";
+
+.statusBoard {
+    padding: 36px;
+    color: $blue;
+    background: rgba(6, 26, 75, 1);
+    font-size: 18px;
+    .divider {
+        background: rgba(0, 93, 234, 1);
+        height: 1px;
+    }
+    .unit{
+        color: $blue;
+    }
+}
