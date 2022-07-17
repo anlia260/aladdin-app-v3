@@ -9,7 +9,7 @@ export default function ZapInfo({ zapTitle, slippage, slippageChange, zapType, m
     <div className={cn(styles.zapInfo, 'mb-1')}>
       {zapTitle && <div className="font-semibold mt-6">{zapTitle}</div>}
       {isShowMinAmount ?
-        minAmount && <Info name={`Minimum ${zapType}`} value={`${minAmount == 0 ? '-' : minAmount} ${isLpMinAmount ? `${tokenName}  ${minAmount == 0 ? '' : `~$${minLpAmountTvl}`}` : ''}`} />
+        minAmount && <Info name={`Minimum ${zapType}`} value={`${minAmount === 0 ? '-' : minAmount} ${isLpMinAmount ? `${tokenName}  ${minAmount === 0 ? '' : `~$${minLpAmountTvl}`}` : ''}`} />
         : ''
       }
       {slippage && <SlippageInfo slippage={slippage} slippageChange={slippageChange} />}

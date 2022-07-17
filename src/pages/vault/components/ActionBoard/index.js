@@ -7,42 +7,26 @@ import styles from './styles.module.scss'
 import DepositModal from './coms/DepositModal'
 import WithdrawModal from './coms/WithdrawModal'
 import Button from 'components/Button'
-import useACrv from '../../hook/useACrv'
+import useActionBoard from '../../controllers/useActionBoard'
 
 export default function ActionBoard(props) {
+  const { vaultType } = props
   const [refreshTrigger, setRefreshTrigger] = useState(1)
-  const { userInfo, acrvInfo } = useACrv(refreshTrigger)
+  const {
+    userInfo, acrvInfo,
+    myBalance,
+    cvxCrvNum,
+    poolsRewardaCrv,
+    acrvText,
+    apy, convexApy, convexInfo, CRVConcentrated } = useActionBoard({ vaultType, refreshTrigger })
+
   const { currentAccount, connectWallet, currentChainId } = useContext(Web3Context)
   const [depositVisible, setDepositVisible] = useState(false)
   const [withdrawVisible, setWithdrawVisible] = useState(false)
 
-  const [CRVConcentrated, setCRVConcentrated] = useState(0)
-  const [myAcrvBalance, setMyAcrvBalance] = useState(0)
-  const myBalance = cBN(userInfo.allPoolRewardaCrv).plus(userInfo.userAcrvWalletBalance)
-  useEffect(async () => {
-    const crvPrice = await getTokenPrice('convex-crv')
-    setCRVConcentrated(
-      cBN(crvPrice)
-        .multipliedBy(acrvInfo.totalUnderlying)
-        .multipliedBy(acrvInfo.rate),
-    )
-    setMyAcrvBalance(
-      cBN(crvPrice)
-        .multipliedBy(myBalance)
-        .multipliedBy(acrvInfo.rate),
-    )
-  }, [acrvInfo, userInfo.userAcrvWalletBalance, userInfo.userACrvBalance])
 
-  const convexApy = getConvexInfo('CRV')?.apy?.project || 0
-
-  const apy = cBN(parseFloat(convexApy))
-    .dividedBy(100)
-    .dividedBy(365)
-    .plus(1)
-    .pow(365)
-    .minus(1)
-    .shiftedBy(2)
-
+  const _claimableTitle = vaultType == 'new' ? 'Claimable from IFO vault profit' : 'Claimable from vault profit'
+  
   const handleDeposit = () => {
     const flag = checkWalletConnect(currentAccount, connectWallet, currentChainId)
     flag && setDepositVisible(true)
@@ -53,14 +37,12 @@ export default function ActionBoard(props) {
     flag && setWithdrawVisible(true)
   }
 
-  const cvxCrvNum = cBN(myBalance).multipliedBy(acrvInfo.rate)
-  const acrvText = cBN(myBalance || 0).isZero() ? '' : `≈ ${fb4(cvxCrvNum)} cvxCRV / ${fb4(myAcrvBalance, true)}`
   return (
     <div className={styles.actionBoard}>
       <div className={styles.metaInfo}>
         <div>
           <div className="flex items-center justify-between">
-            <img src={ACRVIcon} className="w-10 mr-2" />
+            <img src={ACRVIcon} className="w-10 mr-2" alt="acrv" />
             <div>
               <div className="color-white">Concentrator</div>
               <div className="color-light-blue">aCRV</div>
@@ -96,7 +78,7 @@ export default function ActionBoard(props) {
       </div>
       <div className={styles.actionMoreInfo}>
         <div>Wallet Balance: {fb4(userInfo.userAcrvWalletBalance)} aCRV</div>
-        <div>Claimable from vault profit: {fb4(userInfo.allPoolRewardaCrv)} aCRV</div>
+        {poolsRewardaCrv > 0 && <div>{_claimableTitle}: {fb4(poolsRewardaCrv)} aCRV</div>}
       </div>
       <div className={styles.actions}>
         <Button theme="lightBlue" onClick={handleDeposit}>
@@ -106,8 +88,8 @@ export default function ActionBoard(props) {
           Withdraw
         </Button>
       </div>
-      {depositVisible && <DepositModal onCancel={() => setDepositVisible(false)} />}
-      {withdrawVisible && <WithdrawModal setRefreshTrigger={setRefreshTrigger} onCancel={() => setWithdrawVisible(false)} />}
+      {depositVisible && <DepositModal vaultType={vaultType} onCancel={() => setDepositVisible(false)} />}
+      {withdrawVisible && <WithdrawModal vaultType={vaultType} setRefreshTrigger={setRefreshTrigger} onCancel={() => setWithdrawVisible(false)} />}
     </div>
   )
 }

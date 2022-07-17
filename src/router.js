@@ -11,6 +11,16 @@ const routes = [
     exact: true,
   },
   {
+    path: '/farming',
+    Component: lazy(() => import('pages/farming')),
+    exact: true,
+  },
+  {
+    path: '/lock',
+    Component: lazy(() => import('pages/lock')),
+    exact: true,
+  },
+  {
     path: '/auth/404',
     Component: lazy(() => import('pages/auth/404')),
     exact: true,

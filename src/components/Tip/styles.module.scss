@@ -3,9 +3,10 @@
 
 .tip{
     position: relative;
-    display: inline-block;
-    vertical-align: center;
-   
+    // display: inline-block;
+    vertical-align:middle;
+    display: inline-flex;
+
     &:hover{
         .title{
             display: block;

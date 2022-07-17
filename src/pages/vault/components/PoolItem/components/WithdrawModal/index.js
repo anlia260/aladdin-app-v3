@@ -3,8 +3,6 @@ import Modal from 'components/Modal'
 import Input, { Info } from 'components/Input'
 import { Web3Context } from 'context/Web3Context'
 import config from 'config'
-import abi from 'config/abi'
-import { useContract } from 'hooks/useContracts'
 import Button from 'components/Button'
 import Tip from 'components/Tip'
 import { cBN, basicCheck, formatBalance, numberToString } from 'utils'
@@ -12,25 +10,25 @@ import NoPayableAction, { noPayableErrorAction } from 'utils/noPayableAction'
 import styles from './styles.module.scss'
 import useWeb3 from 'hooks/useWeb3'
 import cryptoIcons from 'assets/crypto-icons-stack.svg'
-import useConvexVault from 'pages/vault/hook/useConvexVault';
-import useAcrv from 'pages/vault/hook/useACrv';
+import VAULT from 'config/contract/VAULT'
+import useActionBoard from 'pages/vault/controllers/useActionBoard'
 const crvLogo = `${cryptoIcons}#crv`
 
 export default function WithdrawModal(props) {
-  const { harvestVault } = useConvexVault();
-  const { fetchCotractInfo } = useAcrv()
-  const { currentAccount, web3 } = useContext(Web3Context)
-  const { getBlockNumber, checkChain, CHAINSTATUS, currentBlock } = useWeb3()
-  const { onCancel, info, setRefreshTrigger, harvestList } = props
+  const vaultContract = VAULT();
+  const { getBlockNumber, currentAccount, checkChain, CHAINSTATUS, currentBlock } = useWeb3()
+  const { onCancel, info, setRefreshTrigger: setPropsRefreshTrigger, harvestList } = props
   const [withdrawAmount, setWithdrawAmount] = useState()
   const [withdrawing, setWithdrawing] = useState(false)
   const [harvesting, setHarvesting] = useState(false)
-  const vaultContract = useContract(config.contracts.convexVault, abi.AladdinConvexVaultABI)
   const [userInfo, setUserInfo] = useState({
     shares: 0,
   })
   const [rewarcAcrv, setRewarcAcrv] = useState(0);
   const { totalUnderlying, totalShare } = info
+  const [refreshTrigger, setRefreshTrigger] = useState(1)
+  const { acrvInfo } = useActionBoard({ refreshTrigger })
+
   const earned = cBN(totalUnderlying)
     .div(totalShare)
     .multipliedBy(userInfo.shares)
@@ -45,11 +43,7 @@ export default function WithdrawModal(props) {
     })
     try {
       const harvestData = await vaultContract.methods.harvest(info.id, currentAccount, 0).call()
-      // console.log('harvestData---',harvestData)
-      // console.log('shares---',shares)
-      // console.log('totalShare---',totalShare)
-
-      const acrvInfo = await fetchCotractInfo();
+      // const acrvInfo = await fetchCotractInfo();
       const { totalUnderlying: acrvTotalUnderlying, totalSupply: acrvTotalSupply } = acrvInfo;
       const _fee = cBN(1).minus(0.005).minus(0.005);
       const rewarCvxCrv = harvestData ? cBN(shares).div(totalShare).multipliedBy(harvestData).multipliedBy(_fee) : 0
@@ -72,7 +66,20 @@ export default function WithdrawModal(props) {
 
   const handleHarvest = async () => {
     setHarvesting(true)
-    await harvestVault(info.id)
+    const reward = await vaultContract.methods.harvest(info.id, currentAccount, 0).call({ from: currentAccount, gas: 5000000 })
+    if (reward * 1) {
+      const _reward = cBN(reward)
+        .multipliedBy(9)
+        .div(10)
+        .toFixed(0)
+      const apiCall = await vaultContract.methods.harvest(info.id, currentAccount, _reward)
+      const estimatedGas = await apiCall.estimateGas({ from: currentAccount })
+      const gas = parseInt(estimatedGas * 1.2, 10) || 0
+      await NoPayableAction(() => apiCall.send({ from: currentAccount, gas }), {
+        key: 'harvestVault',
+        action: 'harvest',
+      })
+    }
     setHarvesting(false)
     await getPidInfo()
   }
@@ -102,7 +109,7 @@ export default function WithdrawModal(props) {
       })
       onCancel()
       setWithdrawing(false)
-      setRefreshTrigger(prev => prev + 1)
+      setPropsRefreshTrigger(prev => prev + 1)
     } catch (error) {
       // console.log(error)
       setWithdrawing(false)

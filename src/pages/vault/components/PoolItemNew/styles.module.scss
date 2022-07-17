@@ -1,18 +1,19 @@
 @import "../../../../mixins.scss";
 
 .poolItemNew {
-  margin-bottom: 24px;
+  margin-bottom: 12px;
+  overflow-x: auto;
   &.liquidityItem {
-    margin-bottom: 52px;
+    margin-bottom: 78px;
     .briefLine {
-      grid-template-columns: 200px 1fr 1fr 1fr 1fr 32px;
+      grid-template-columns: 260px 1fr 1fr 1fr 1fr 32px;
     }
   }
   .briefLine {
     text-align: center;
     padding: 24px 32px;
     display: grid;
-    grid-template-columns: 200px 1fr 1fr 1fr 32px;
+    grid-template-columns: 200px 1fr 1fr 1fr 1fr 32px;
     align-items: center;
     font-size: 18px;
     font-weight: 300;
@@ -36,6 +37,7 @@
     background: rgba(241, 145, 73, 1);
     padding: 2px 12px;
     font-weight: 500;
+    margin-left: 32px;
   }
   .poolName {
     display: flex;
@@ -59,7 +61,7 @@
     }
     .actionHint {
       font-size: 14px;
-      margin: 32px 0 24px;
+      // margin: 32px 0 24px;
     }
     .aprTag {
       font-size: 18px;
@@ -92,11 +94,11 @@
   @media (min-width: 1536px) {
     &.liquidityItem{
       .briefLine {
-        grid-template-columns: 200px 1fr 1fr 1fr 1fr 120px;
+        grid-template-columns: 260px 1fr 1fr 1fr 1fr 120px;
       }
     }
     .briefLine {
-      grid-template-columns: 200px 1fr 1fr 1fr 120px;
+      grid-template-columns: 200px 1fr 1fr 1fr 1fr 120px;
     }
   }
   @media (max-width: 768px) {
@@ -105,6 +107,10 @@
       .briefLine {
         grid-template-columns: 120px 1fr 1fr 1fr 1fr 24px;
       }
+    }
+    .ifoTag {
+   
+      margin-left: 16px;
     }
     .detail {
       padding: 24px;
@@ -128,6 +134,18 @@
         width: 20px;
       }
     }
+    .actions {
+      // display: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      // gap: 12px;
+      button{
+        margin: 1% 0 !important;
+        width: 49%;
+        
+      }
+    }
     .poolName {
       gap: 8px;
     }
@@ -135,14 +153,14 @@
   @media (max-width: 576px) {
     &.liquidityItem{
       .briefLine {
-        grid-template-columns: 110px 1fr 1fr 1fr 16px;
+        grid-template-columns: 110px 1fr 1fr 1fr 1fr 16px;
       }
     }
     .briefLine {
-      grid-template-columns: 110px 1fr 1fr 16px;
-      div:nth-child(4) {
-        display: none;
-      }
+      grid-template-columns: 110px 1fr 1fr 1fr 1fr 16px;
+      // div:nth-child(4) {
+      //   display: none;
+      // }
     }
   }
 }

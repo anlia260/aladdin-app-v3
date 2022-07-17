@@ -4,26 +4,38 @@ import Input, { Info } from 'components/Input'
 import Select from 'components/Select'
 import Tip from 'components/Tip'
 import { Web3Context } from 'context/Web3Context'
-import useACrv from 'pages/vault/hook/useACrv'
+import useActionBoard from 'pages/vault/controllers/useActionBoard'
 import { cBN, basicCheck, formatBalance, numberToString } from 'utils'
 import NoPayableAction, { noPayableErrorAction } from 'utils/noPayableAction'
 import Button from 'components/Button'
 import styles from './styles.module.scss'
 import ZapInfo from 'components/ZapInfo'
+import VAULT from 'config/contract/VAULT'
+import VAULTNEW from 'config/contract/VAULTNEW'
+import ACRV, { getACRVAddress } from 'config/contract/ACRV'
 
 const _initData = {
   availableHint: 'aCRV Wallet Balance + aCRV Claimable',
 }
 
 export default function WithdrawModal(props) {
-  const { onCancel, setRefreshTrigger: setRefreshTrigger0 } = props
+  const { onCancel, vaultType, setRefreshTrigger: setRefreshTrigger0 } = props
   const { currentAccount, web3 } = useContext(Web3Context)
   const [slippage, setSlippage] = useState('0.3')
   const [refreshTrigger, setRefreshTrigger] = useState(1)
-  const { userInfo, acrvInfo, aCrvContract, convexVaultContract, harvestEarn, harvestAcrv } = useACrv(refreshTrigger)
+
+  const {
+    userInfo, acrvInfo,
+    myBalance,
+    apy, convexApy, convexInfo, CRVConcentrated, harvestEarn, harvestIFOEarn } = useActionBoard({ vaultType, refreshTrigger })
+
+  const convexVaultsIFOContract = VAULTNEW()
+  const convexVaultContract = VAULT()
+  const aCrvContract = ACRV()
+
   const [withdrawAmount, setWithdrawAmount] = useState()
   const [percent, setPercent] = useState(0)
-  const { userAcrvWalletBalance, allPoolRewardaCrv } = userInfo
+  const { userAcrvWalletBalance, allPoolRewardaCrv, allIFOPoolRewardaCrv } = userInfo
   const [withdrawing, setWithdrawing] = useState(false)
   const [harvesting, setHarvesting] = useState(false)
   const [selectValue, setSelectValue] = useState(0)
@@ -35,9 +47,19 @@ export default function WithdrawModal(props) {
   const [checkoutAssets, setCheckoutAssets] = useState(0)
   const [availableHint, setAvailableHint] = useState(_initData.availableHint)
   const [withdrawBalance, setWithdrawBalance] = useState(0)
+  const _convexVaultContract = vaultType == 'new' ? convexVaultsIFOContract : convexVaultContract
+  const _poolsRewardaCrv = vaultType == 'new' ? allIFOPoolRewardaCrv : allPoolRewardaCrv
+  const _harvestEarn = vaultType == 'new' ? harvestIFOEarn : harvestEarn;
   const handleHarvest = async () => {
     setHarvesting(true)
-    await harvestAcrv()
+    const apiCall = await aCrvContract.methods.harvest(currentAccount, 0)
+    const estimatedGas = await apiCall.estimateGas({ from: currentAccount })
+    const gas = parseInt(estimatedGas * 1.2, 10) || 0
+
+    await NoPayableAction(() => apiCall.send({ from: currentAccount, gas }), {
+      key: 'harvestAcrv',
+      action: 'harvest',
+    })
     setHarvesting(false)
   }
 
@@ -54,7 +76,7 @@ export default function WithdrawModal(props) {
       const _option = selectValue
       const [_vaultMinout, _claimMinout] = await handleCheckOutAssets()
       if (isClaim) {
-        const vaultClaimall = convexVaultContract.methods.claimAll(_claimMinout, 1)
+        const vaultClaimall = _convexVaultContract.methods.claimAll(_claimMinout, 1)
         const estimatedGas = await vaultClaimall.estimateGas({ from: currentAccount })
         const gas = parseInt(estimatedGas * 1.2, 10) || 0
         await NoPayableAction(() => vaultClaimall.send({ from: currentAccount, gas }), {
@@ -83,7 +105,7 @@ export default function WithdrawModal(props) {
         setRefreshTrigger0(prev => prev + 1)
         onCancel && onCancel()
       } else {
-        const vaultClaimall = convexVaultContract.methods.claimAll(0, 1)
+        const vaultClaimall = _convexVaultContract.methods.claimAll(0, 1)
         const estimatedGas = await vaultClaimall.estimateGas({ from: currentAccount })
         const gas = parseInt(estimatedGas * 1.2, 10) || 0
         await NoPayableAction(
@@ -142,7 +164,7 @@ export default function WithdrawModal(props) {
     const userAcrvWalletBalanceInWei = cBN(userAcrvWalletBalance ?? 0).toFixed(0, 1)
     const _option = selectValue
     if (isClaim) {
-      const vaultMinout1 = await convexVaultContract.methods.claimAll(0, 1).call({
+      const vaultMinout1 = await _convexVaultContract.methods.claimAll(0, 1).call({
         from: currentAccount,
       })
       const _vaultMinout1 = cBN(vaultMinout1)
@@ -164,7 +186,7 @@ export default function WithdrawModal(props) {
       if (cBN(withdrawAmount).isGreaterThan(cBN(userAcrvWalletBalance))) {
         rate = cBN(withdrawAmount).div(withdrawBalance).toFixed(2)
       }
-      const vaultMinout1 = await convexVaultContract.methods.claimAll(0, selectClaimValue).call({
+      const vaultMinout1 = await _convexVaultContract.methods.claimAll(0, selectClaimValue).call({
         from: currentAccount,
       })
       const _vaultMinout1 = cBN(vaultMinout1).multipliedBy(rate)
@@ -192,13 +214,13 @@ export default function WithdrawModal(props) {
   useEffect(() => {
     if (isClaim) {
       setAvailableHint('aCRV Claimable')
-      setWithdrawBalance(allPoolRewardaCrv)
+      setWithdrawBalance(_poolsRewardaCrv)
     } else {
-      const _withdrawBalance = cBN(allPoolRewardaCrv).plus(userAcrvWalletBalance)
+      const _withdrawBalance = cBN(_poolsRewardaCrv).plus(userAcrvWalletBalance)
       setWithdrawBalance(_withdrawBalance)
       setAvailableHint(_initData.availableHint)
     }
-  }, [isClaim, allPoolRewardaCrv, userAcrvWalletBalance])
+  }, [isClaim, _poolsRewardaCrv, userAcrvWalletBalance])
 
   const handleInputChange = (val, percent) => {
     setWithdrawBtnType(cBN(val).isGreaterThan(userAcrvWalletBalance) ? 2 : 1)
@@ -247,7 +269,6 @@ export default function WithdrawModal(props) {
   }
 
   const canSubmit = cBN(withdrawAmount).isGreaterThan(0) && cBN(withdrawAmount).isLessThanOrEqualTo(withdrawBalance)
-  const _harvestEarn = harvestEarn * 1 ? harvestEarn : 0
   // console.log('_harvestEarn---11', _harvestEarn);
   return (
     <Modal onCancel={onCancel} overflowVisible={true}>

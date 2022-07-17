@@ -6,6 +6,25 @@
   width: 160px;
 }
 
+.btn {
+  padding: 6px 8px;
+}
+
+.faq {
+  background: linear-gradient(to bottom, #265ae3, #2729d9);
+}
+
+.mobileMenu{
+  color: #fff;
+  font-size:24px;
+  margin: 0 16px;
+  display: none;
+}
+
+.pcNav{
+  display: flex;
+}
+
 .connectedWrapper {
   position: relative;
   z-index: 1000000000;
@@ -17,15 +36,15 @@
   .menus {
     display: none;
     position: absolute;
-    top: 48px;
+    top: 34px;
     left: 0;
     right: 0;
     color: #41b6e4;
     text-align: center;
     .menu {
       background: #062a72;
-      padding: 12px 0;
-      font-size: 16px;
+      padding: 6px 8px;
+      font-size: 14px;
       cursor: pointer;
       transition: background 0.03s;
       &:hover {
@@ -63,6 +82,12 @@ ul {
 }
 
 @media (max-width: 768px) {
+  .pcNav{
+    display: none;
+  }
+  .mobileMenu{
+    display: block;
+  }
   .link {
     font-size: 14px;
   }

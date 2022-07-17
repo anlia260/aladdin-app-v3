@@ -18,6 +18,7 @@ import reducers from './redux/reducers'
 import sagas from './redux/sagas'
 import Localization from './localization'
 import Web3Context from './web3Context'
+import InitProvider from './context/InitProvider'
 import Router from './router'
 import * as serviceWorker from './serviceWorker'
 
@@ -39,7 +40,9 @@ ReactDOM.render(
     <Localization>
       <Web3Context>
         <ParallaxProvider>
-          <Router history={history} />
+          <InitProvider>
+            <Router history={history} />
+          </InitProvider>
           {/* <Toaster /> */}
         </ParallaxProvider>
       </Web3Context>

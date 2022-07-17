@@ -1,0 +1,130 @@
+@import "../../../../mixins.scss";
+
+.poolItem {
+  margin-bottom: 24px;
+  .briefLine {
+    text-align: center;
+    padding: 24px 32px;
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr 1fr 1fr 32px;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 300;
+    color: $blue;
+    cursor: pointer;
+    background: rgba(2, 14, 45, 0.8);
+    &.active {
+      color: #fff;
+      background: rgba(10, 44, 112, 0.8);
+    }
+    .icon {
+      width: 40px;
+    }
+    .arrow {
+      cursor: pointer;
+    }
+  }
+  .poolName {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .detail {
+    color: $blue;
+    background: rgba(7, 32, 89, 0.8);
+    padding: 32px 44px 32px 100px;
+    .actionTag {
+      font-size: 20px;
+      margin-right: 24px;
+    }
+    .actionToken {
+      font-size: 20px;
+      color: #fff;
+      margin-right: 32px;
+      display: flex;
+      align-items: center;
+    }
+    .actionHint {
+      font-size: 14px;
+      margin: 32px 0 24px;
+    }
+    .aprTag {
+      font-size: 18px;
+      margin-right: 8px;
+    }
+    .aprValue {
+      font-size: 18px;
+      color: #fff;
+    }
+    .aprSection {
+      margin-top: 8px;
+    }
+    .moreInfo {
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 100;
+    }
+    .moreInfoValue {
+      color: #fff;
+    }
+
+    .actions {
+      margin-top: 16px;
+      text-align: right;
+      position: relative;
+      button {
+        margin-left: 24px;
+      }
+      .hint{
+        color: #fff;
+        font-weight: 500;
+        font-size: 12px;
+        position: absolute;
+        top: -22px;
+        right: 0;
+      }
+    }
+  }
+  @media (min-width: 1536px){
+    .briefLine{
+      grid-template-columns: 200px 1fr 1fr 1fr 1fr 120px;
+    }
+    
+  }
+  @media (max-width: 768px) {
+    margin-bottom: 16px;
+    .detail {
+      padding: 24px;
+      .actionTag {
+        font-size: 14px;
+        margin-right: 8px;
+      }
+      .actionToken {
+        font-size: 14px;
+        margin-right: 16px;
+        &:last-child{
+          margin-right: 0;
+        }
+      }
+    }
+    .briefLine {
+      padding: 16px 20px;
+      grid-template-columns: 120px 1fr 1fr 1fr 24px;
+      font-size: 14px;
+      .icon {
+        width: 20px;
+      }
+    }
+    .poolName {
+      gap: 8px;
+    }
+  }
+  @media (max-width: 576px) {
+    .briefLine {
+      grid-template-columns: 110px 1fr 1fr 16px;
+      div:nth-child(4) {
+        display: none;
+      }
+    }
+  }
+}

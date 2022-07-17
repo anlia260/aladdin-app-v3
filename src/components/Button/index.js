@@ -11,8 +11,10 @@ export default function Button({
   theme,
   children,
   disabled,
+  className,
   // pure means this button doesn't have web3 related actions
   pure,
+  style,
 }) {
   const { currentChainId } = useContext(Web3Context)
 
@@ -30,7 +32,7 @@ export default function Button({
     }
   }
   return (
-    <button className={styles[theme]} onClick={handClick} disabled={disabled}>
+    <button className={`${styles[theme]} ${className}`} onClick={handClick} disabled={disabled} style={style}>
       {children} <IOSLoadingIcon show={loading} />
     </button>
   )

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { Parallax } from 'react-scroll-parallax'
 import Button from 'components/Button'
@@ -6,12 +6,11 @@ import cn from 'classnames'
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons'
 import AppHeader from 'components/AppHeader'
 import AppFooter from 'components/AppFooter'
-import ArrowDown from 'assets/arrow-down.svg'
+// import ArrowDown from 'assets/arrow-down.svg'
 import ChartSvg from 'assets/chart.svg'
 import BannerSvg from 'assets/banner.svg'
-import { cBN, formatBalance } from 'utils'
+import { formatBalance } from 'utils'
 import FaqModal from 'components/FaqModal'
-import axios from 'axios'
 import PoolItem from './components/PoolItem'
 import PoolItemNew from './components/PoolItemNew'
 import LiquidityItem from './components/PoolItemNew/liquidityItem'
@@ -19,11 +18,10 @@ import ActionBoard from './components/ActionBoard'
 import StatusBoard from './components/StatusBoard'
 
 import styles from './styles.module.scss'
-import useConvexVault from './hook/useConvexVault'
-import useConvexVaultIFO from './hook/useConvexVaultIFO'
-import useLiquidityMining from './hook/useLiquidityMining'
-import useACrv from './hook/useACrv'
-import useWeb3 from 'hooks/useWeb3'
+import useLiquidityMining from './controllers/useLiquidityMining'
+import useVaultList from './controllers/useVaultList'
+import useTvl from './controllers/useTvl'
+import useActionBoard from './controllers/useActionBoard'
 
 const Banner = () => {
   const width = document.documentElement.clientWidth
@@ -43,7 +41,7 @@ const Banner = () => {
         startScroll={0}
         endScroll={500}
       >
-        <img src={ChartSvg} />
+        <img src={ChartSvg} alt="chart" />
       </Parallax>
       <Parallax
         translateY={[-5, 130]}
@@ -54,61 +52,38 @@ const Banner = () => {
         startScroll={0}
         endScroll={500}
       >
-        <img src={BannerSvg} />
+        <img src={BannerSvg} alt="banner" />
       </Parallax>
     </div>
   )
 }
-let ctime = 0
+
 const VaultPage = () => {
   // new or old
   const [vaultType, setVaultType] = useState('new')
   const [refreshTrigger, setRefreshTrigger] = useState(0)
-  const [refreshIFOTrigger, setRefreshIFOTrigger] = useState(0)
-  const { poolList, ConvexVaultInfo, ConvexVaultTvl, harvestList } = useConvexVault(refreshTrigger)
-  const { poolList: poolIFOList, ConvexVaultIFOInfo, convexVaultIFOTvl } = useConvexVaultIFO(refreshIFOTrigger)
+  const [refreshStatusTrigger, setRefreshStatusTrigger] = useState(0)
   const [faqModalVisible, setFaqModalVisible] = useState(false)
-  const [allConvexPoolVisible, setAllConvexPoolVisible] = useState(false)
   const [sortDesc, setSortDesc] = useState(false)
-  const { getBlockNumber } = useWeb3()
-  const { acrvInfo, userInfo } = useACrv()
-  const [newPoolList, setNewPoolList] = useState(poolList)
+  const { acrvInfo, userInfo } = useActionBoard({ refreshTrigger })
   const { poolList: liquidityPools, liquidityData } = useLiquidityMining(refreshTrigger)
-
-  const setApy = async () => {
-    const json = await axios.get('https://concentrator-api.aladdin.club/apy/', { timeout: 2000 })
-    localStorage.setItem('app.settings.apy', JSON.stringify(json.data))
-  }
-
-  // const checkFaq = () => {
-  //   const totalShare = ConvexVaultInfo.listInfo.reduce((a, b) => +a + +b.totalShare, 0)
-  //   if (!totalShare && !userInfo.allPoolRewardaCrv && !userInfo.userAcrvWalletBalance) {
-  //     setFaqModalVisible(true)
-  //   }
-  // }
+  const { ConvexVaultTvl, convexVaultIFOTvl } = useTvl()
+  const { VAULT_LIST_DATA, VAULT_NEW_LIST_DATA } = useVaultList(refreshTrigger)
 
   const sortPoolsByDeposit = () => {
-    let _newPoolList = poolList
-    if (sortDesc) {
-      _newPoolList = ConvexVaultInfo.listInfo.sort((a, b) => {
-        return cBN(b.totalShare * b.lpTokenPrice).toNumber() - cBN(a.totalShare * a.lpTokenPrice).toNumber()
-      })
-    } else {
-      _newPoolList = ConvexVaultInfo.listInfo.sort((a, b) => {
-        return cBN(a.totalShare * a.lpTokenPrice).toNumber() - cBN(b.totalShare * b.lpTokenPrice).toNumber()
-      })
-    }
-    setNewPoolList(_newPoolList)
-    setSortDesc(per => !per)
+    // let _newPoolList = poolList
+    // if (sortDesc) {
+    //   _newPoolList = ConvexVaultInfo.listInfo.sort((a, b) => {
+    //     return cBN(b.totalShare * b.lpTokenPrice).toNumber() - cBN(a.totalShare * a.lpTokenPrice).toNumber()
+    //   })
+    // } else {
+    //   _newPoolList = ConvexVaultInfo.listInfo.sort((a, b) => {
+    //     return cBN(a.totalShare * a.lpTokenPrice).toNumber() - cBN(b.totalShare * b.lpTokenPrice).toNumber()
+    //   })
+    // }
+    // setNewPoolList(_newPoolList)
+    // setSortDesc(per => !per)
   }
-
-  useEffect(() => {
-    const _currTime = +new Date()
-    if (_currTime - ctime > 1000 * 60 * 2) {
-      ctime = _currTime
-      setApy()
-    }
-  }, [getBlockNumber()])
 
   return (
     <div className={styles.vaultPage}>
@@ -127,7 +102,9 @@ const VaultPage = () => {
         <div className={styles.vaultsInfos}>
           <div className={styles.vaultsInfo}>
             <div className={styles.vaultsInfoTitle}>TVL</div>
-            <div className={styles.vaultsInfoValue}>${formatBalance(vaultType == 'new' ? convexVaultIFOTvl : ConvexVaultTvl, 18, 2)}</div>
+            <div className={styles.vaultsInfoValue}>
+              ${formatBalance(vaultType === 'new' ? convexVaultIFOTvl : ConvexVaultTvl, 18, 2)}
+            </div>
           </div>
           <div className={cn(styles.vaultsInfo, styles.crv)}>
             <div className={styles.vaultsInfoTitle}>cvxCRV In Concentrator</div>
@@ -135,82 +112,82 @@ const VaultPage = () => {
           </div>
         </div>
 
-
-        <div>
-          <div className={styles.liquidityListHeader}>
-            <div>Liquidity Mining</div>
-            <div>APR</div>
-            <div>TVL</div>
-            <div>Deposits</div>
-            <div>Earned</div>
-            <div />
+        <div className={styles.scrollOut}>
+          <div className={styles.scrollIn}>
+            <div className={styles.liquidityListHeader}>
+              <div>Liquidity Mining</div>
+              <div>APR</div>
+              <div>TVL</div>
+              <div>Deposits</div>
+              <div>Earned</div>
+              <div />
+            </div>
+            {liquidityPools.map((item, index) => (
+              <LiquidityItem
+                item={item}
+                triggerChange={() => setRefreshTrigger(prev => prev + 1)}
+                key={index}
+              />
+            ))}
           </div>
-          {liquidityPools.map((item, index) => (
-            <LiquidityItem
-              isLP={true}
-              item={item}
-              harvestList={harvestList}
-              triggerChange={() => setRefreshTrigger(prev => prev + 1)}
-              poolItem={liquidityData}
-              key={index}
-            />
-          ))}
         </div>
 
         <div className="mb-16">
-          <div className="flex items-center gap-4 mb-6">
-            <Button pure={true} onClick={() => setVaultType('new')} theme={vaultType === 'new' ? 'lightBlue' : 'deepBlue'}>
-              New Vault
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <Button pure={true} onClick={() => setVaultType('new')} theme={vaultType === 'new' ? 'lightBlue' : 'transBlue'}>
+              IFO Vaults
             </Button>
-            <Button pure={true} onClick={() => setVaultType('old')} theme={vaultType === 'old' ? 'lightBlue' : 'deepBlue'}>
-              Old Vault
+            <Button pure={true} onClick={() => setVaultType('old')} theme={vaultType === 'old' ? 'lightBlue' : 'transBlue'}>
+              Original Vaults
             </Button>
           </div>
 
           <div className={styles.vaultDesc}>
-          Migrate your assets to the new vault to participate in the IFO.<br/>
-          
-           During the IFO, vaults rewards <span className="color-white">$aCRV</span> will be replaced by <span className="color-white">$CTR</span> with 1:1. <br/>
-           
-           After the IFO, vaults rewards will revert to <span className="color-white">$aCRV</span> and auto-compounding.
-
+            Deposit directly in IFO vaults or migrate from original vaults to participate.  During the IFO you earn <span className="color-white">$CTR</span>, and after you continue earning in <span className="color-white">$aCRV</span>.
+            {/* Migrate your assets to the new IFO vaults to participate in the IFO! Zero withdrawal fees to migrate. During the IFO, the reward is{' '}
+            <span className="color-white">$CTR</span>. <br/>After the IFO, the vault becomes a standard Concentrator type, with reward in {' '}
+            <span className="color-white">$aCRV</span> */}
           </div>
         </div>
 
         {vaultType === 'new' && (
           <div className={styles.poolsWrapper}>
             <div className={styles.poolsList}>
-              <div className="mb-12">
-                <div className={styles.poolsListHeader}>
-                  <div />
-                  <div>APR</div>
-                  <div>TVL</div>
-                  <div>Deposits</div>
-                  <div />
-                </div>
-                {poolIFOList.map((item, index) => (
-                  <PoolItemNew
-                    item={item}
-                    harvestList={harvestList}
-                    triggerChange={() => setRefreshTrigger(prev => prev + 1)}
-                    poolItem={ConvexVaultIFOInfo.listInfo[index]}
-                    key={index}
-                  />
-                ))}
-                {/* <div
+              <div className={styles.scrollOut}>
+                <div className={styles.scrollIn}>
+                  <div className={styles.poolsListHeader}>
+                    <div>Pool Name</div>
+                    <div>APR</div>
+                    <div>TVL</div>
+                    <div>Deposits</div>
+                    <div />
+                  </div>
+                  {VAULT_NEW_LIST_DATA.map((item, index) => (
+                    <PoolItemNew
+                      item={item}
+                      // harvestList={harvestList}
+                      triggerChange={str => {
+                        setRefreshStatusTrigger(prev => prev + 1)
+                        setRefreshTrigger(`${Math.random()}_${str}`)
+                      }}
+                      // poolItem={ConvexVaultIFOInfo.listInfo[index]}
+                      key={index}
+                    />
+                  ))}
+                  {/* <div
                   className={cn('flex items-center justify-center gap-4 py-8 color-blue', styles.toggleAllPools)}
                   onClick={() => setAllConvexPoolVisible(prev => !prev)}
                 >
                   Show {allConvexPoolVisible ? 'Less' : 'All'} Convex Pool
                   <img src={ArrowDown} className={cn('w-8 h-8', allConvexPoolVisible && 'transform rotate-180')} />
                 </div> */}
+                </div>
               </div>
-
             </div>
 
             <div className={styles.right}>
-              <StatusBoard />
-              <ActionBoard />
+              <StatusBoard refreshTrigger={refreshStatusTrigger} />
+              <ActionBoard vaultType={vaultType} />
             </div>
           </div>
         )}
@@ -229,18 +206,12 @@ const VaultPage = () => {
                 <div>Deposits</div>
                 <div />
               </div>
-              {newPoolList.map((item, index) => (
-                <PoolItem
-                  item={item}
-                  harvestList={harvestList}
-                  triggerChange={() => setRefreshTrigger(prev => prev + 1)}
-                  poolItem={ConvexVaultInfo.listInfo[index]}
-                  key={index}
-                />
+              {VAULT_LIST_DATA.map((item, index) => (
+                <PoolItem item={item} triggerChange={str => setRefreshTrigger(`${Math.random()}_${str}`)} key={index} />
               ))}
             </div>
             <div className={styles.right}>
-              <ActionBoard />
+              <ActionBoard vaultType={vaultType} />
             </div>
           </div>
         )}

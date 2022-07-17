@@ -1,89 +1,39 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { Web3Context } from 'context/Web3Context'
+import React, { useState } from 'react'
 import cn from 'classnames'
+import { useUpdateEffect } from 'ahooks'
 import ArrowDown from 'assets/arrow-down.svg'
 import ACRVIcon from 'assets/pools/acrv.svg'
-import { useUserPoolInfo } from 'pages/vault/hook/useConvexVaultIFO'
 import useWeb3 from 'hooks/useWeb3'
-import { cBN, checkWalletConnect, getTokenPrice, getConvexInfo, formatBalance, numberToString, fb4 } from 'utils'
+import { cBN, checkWalletConnect } from 'utils'
 import styles from './styles.module.scss'
 import Button from 'components/Button'
-import Tip from 'components/Tip'
+import { VAULT_LIST, VAULT_LIST_IFO } from 'config/convexVault'
 import DepositModal from './components/DepositModal'
 import WithdrawModal from './components/WithdrawModal'
 import LiquidityDepositModal from './components/LiquidityDepositModal'
 import LiquidityWithdrawModal from './components/LiquidityWithdrawModal'
 import cryptoIcons from 'assets/crypto-icons-stack.svg'
+import Tip from 'components/Tip'
 const crvLogo = `${cryptoIcons}#crv`
 
 export default function PoolItemNew(props) {
-  const { currentAccount, connectWallet, getBlockNumber, checkChain, CHAINSTATUS, currentChainId } = useWeb3()
-  const { item: oldItem, poolItem = {}, harvestList } = props
-  const item = poolItem.id ? poolItem : oldItem
-  const { totalShare = 0, totalUnderlying = 0, lpTokenPrice = 1 } = poolItem
+  const { currentAccount, connectWallet, currentChainId } = useWeb3()
+  const { item, poolItem = {}, harvestList } = props
+  const { earned, tvl, ctrApy, ctrCurrentApy, userInfo, convexInfo } = item
   const [active, setActive] = useState(false)
 
   const [depositVisible, setDepositVisible] = useState(false)
   const [withdrawVisible, setWithdrawVisible] = useState(false)
   const [liquidityDepositVisible, setLiquidityDepositVisible] = useState(false)
   const [liquidityWithdrawVisible, setLiquidityWithdrawVisible] = useState(false)
-  const [userInfo, setUserInfo] = useState({})
 
-  const [refreshTrigger, setRefreshTrigger] = useState(0)
-  const { convexVaultsIFOContract } = useUserPoolInfo(item, refreshTrigger)
+  const [refreshTrigger, setRefreshTrigger] = useState(null)
 
-  const { totalSupply, userDeposits } = poolItem;
-
-  const getUserInfo = async () => {
-    const res = await convexVaultsIFOContract.methods.userInfo(item.id, currentAccount).call()
-    return {
-      shares: res.shares,
-    }
-  }
-
-  useEffect(() => {
-    props.triggerChange()
+  useUpdateEffect(() => {
+    const refreshItmeIndex =
+      VAULT_LIST.filter(i => !i.isExpired).length + VAULT_LIST_IFO.filter(i => !i.isExpired).findIndex(i => i.id === item.id)
+    props.triggerChange(refreshItmeIndex)
   }, [refreshTrigger])
-
-  useEffect(async () => {
-    if (checkChain == CHAINSTATUS['checkUser']) {
-      const _useInfo = await getUserInfo(item)
-      setUserInfo(_useInfo)
-    }
-  }, [getBlockNumber(), checkChain, refreshTrigger, item])
-
-  const tvlCBN = cBN(totalShare).multipliedBy(lpTokenPrice)
-  let tvl = formatBalance(tvlCBN, 18, 2)
-  // console.log("lpTokenPrice--", item.id, lpTokenPrice.toString())
-  // const earned = fb4((totalUnderlying / totalShare) * userInfo.shares)
-  let earned = formatBalance(
-    cBN(totalUnderlying)
-      .div(cBN(totalShare))
-      .multipliedBy(userInfo.shares)
-      .multipliedBy(lpTokenPrice)
-      .toString(),
-    18,
-    2,
-  )
-  const convexApy = getConvexInfo('CRV') ? getConvexInfo('CRV').apy.project : 0
-  const convexInfo = getConvexInfo(item.name)
-  const baseApy = convexInfo ? convexInfo.apy.current : 0
-
-
-
-  const acrvApy = cBN(parseFloat(convexApy))
-    .dividedBy(100)
-    .dividedBy(52)
-    .plus(1)
-    .pow(52)
-    .minus(1)
-    .shiftedBy(2)
-
-  let compoundApy = cBN(0)
-  // console.log(item.name, baseApy, parseInt(baseApy), convexApy, acrvApy.toFixed(2), compoundApy.toFixed(2))
-  let apy = compoundApy.plus(cBN(parseFloat(baseApy)))
-
-
 
   const toggleActive = () => setActive(prev => !prev)
 
@@ -97,6 +47,12 @@ export default function PoolItemNew(props) {
     flag && setWithdrawVisible(true)
   }
 
+  const showApy = cBN(convexInfo?.curveApys?.baseApy ?? 0)
+    .plus(ctrApy ?? 0)
+    .toFixed(2)
+  const showCurrentApy = cBN(convexInfo?.curveApys?.baseApy ?? 0)
+    .plus(ctrCurrentApy ?? 0)
+    .toFixed(2)
   const displayPool = item.isExpired && cBN(earned || 0).isZero()
   return (
     <div className={styles.poolItemNew} style={{ display: displayPool ? 'none' : 'block' }}>
@@ -105,18 +61,18 @@ export default function PoolItemNew(props) {
           <img src={item.logo} alt={item.name} className={styles.icon} />
           <div>{item.name}</div>
         </div>
-        <div>{apy.toFixed(2)}%</div>
-        <div>{!cBN(tvl).isZero() ? `$${tvl}` : '-'}</div>
+        <div>{isNaN(showApy) ? '-' : showApy}%</div>
+        <div>{(!cBN(tvl).isZero() && tvl != undefined) ? `${tvl}` : '-'}</div>
         {/* <div>{!cBN(userInfo.pendingReward).isZero() ? formatBalance(userInfo.pendingReward, 18, 4) : '-'}</div> */}
         <div>{!cBN(earned || 0).isZero() && earned != '-' ? `$ ${earned}` : '-'}</div>
         <div className="flex items-center gap-4">
           <span className="hidden 2xl:block color-blue">More</span>
-          <img src={ArrowDown} className={cn('w-8 h-8', active && 'transform rotate-180')} />
+          <img alt="arrow-down" src={ArrowDown} className={cn('w-8 h-8', active && 'transform rotate-180')} />
         </div>
       </div>
       {active && (
         <div className={styles.detail}>
-          <div className="flex items-center">
+          <div className="flex items-start flex-col gap-2 md:flex-row md:items-center md:gap-0">
             <span className={styles.actionTag}>DEPOSIT</span>
             <span className={styles.actionToken}>
               <div className="relative">
@@ -127,10 +83,11 @@ export default function PoolItemNew(props) {
             </span>
             <span className={styles.actionTag}>EARN</span>
             <span className={styles.actionToken}>
-              <img src={ACRVIcon} className="w-8 mr-2" />
+              <img src={ACRVIcon} alt="acrv-icon" className="w-8 mr-2" />
               CTR
+              <div className={styles.ifoTag}>IFO</div>
             </span>
-            <div className={styles.ifoTag}>IFO</div>
+
           </div>
           <div className={styles.actionHint}>
             Deposit liquidity into{' '}
@@ -138,17 +95,28 @@ export default function PoolItemNew(props) {
               {item.nameShow}
             </a>{' '}
             (without staking in the Curve gague), then stake{' '}
-            <span className="font-medium text-white">{item.stakeTokenSymbol}</span> here. During the IFO,vaults rewards $aCRV
-            will replaced by $CTR wiht 1;1
+            <span className="font-medium text-white">{item.stakeTokenSymbol}</span> here.<br />
+            During the IFO, vault rewards $aCRV will be replaced by <span className="text-white font-medium">$CTR</span> 1:1
           </div>
 
           <div className={styles.aprSection}>
             <span className={styles.aprTag}>APY:</span>
-            <span className={styles.aprValue}>{apy.toFixed(2)}%</span>
+            <span className={styles.aprValue}>{isNaN(showApy) ? '-' : showApy}%</span> <Tip
+              title={`Current Apy : ${isNaN(showCurrentApy) ? '-' : showCurrentApy}% <br/> Base Curve vAPR: ${(convexInfo?.curveApys?.baseApy ?? 0).toFixed(2)}% <br/> CTR APR: ${isNaN(ctrCurrentApy) ? '-' : ctrCurrentApy || 0}%`}
+            />
+          </div>
+
+          <div className={styles.moreInfo}>
+            <div>
+              Base Curve vAPR: <span className={styles.moreInfoValue}>{(convexInfo?.curveApys?.baseApy ?? 0).toFixed(2)}%</span>
+            </div>
+            <div>
+              CTR APR: <span className={styles.moreInfoValue}>{isNaN(ctrApy) ? '-' : ctrApy || 0}%</span>
+            </div>
           </div>
 
           <div className={styles.actions}>
-            <Button theme="lightBlue" disabled={poolItem.closeDeposit} onClick={handleDeposit}>
+            <Button theme="lightBlue" disabled={item.closeDeposit} onClick={handleDeposit}>
               Deposit
             </Button>
             <Button theme="deepBlue" onClick={handleWithdraw}>
@@ -158,13 +126,13 @@ export default function PoolItemNew(props) {
         </div>
       )}
       {depositVisible && (
-        <DepositModal info={poolItem} setRefreshTrigger={setRefreshTrigger} onCancel={() => setDepositVisible(false)} />
+        <DepositModal info={item} setRefreshTrigger={setRefreshTrigger} onCancel={() => setDepositVisible(false)} />
       )}
       {withdrawVisible && (
         <WithdrawModal
-          info={poolItem}
+          info={item}
           harvestList={harvestList}
-          userShares={userInfo.shares}
+          userShares={userInfo?.shares}
           setRefreshTrigger={setRefreshTrigger}
           onCancel={() => setWithdrawVisible(false)}
         />
@@ -180,7 +148,7 @@ export default function PoolItemNew(props) {
         <LiquidityWithdrawModal
           info={poolItem}
           harvestList={harvestList}
-          userShares={userInfo.shares}
+          userShares={userInfo?.shares}
           setRefreshTrigger={setRefreshTrigger}
           onCancel={() => setLiquidityWithdrawVisible(false)}
         />

@@ -150,6 +150,23 @@ svg {
   display: none;
 }
 
+.mobile-drawer{
+  z-index: 9999;
+  .ant-drawer-body{
+    color: #fff;
+    background: #272727;
+    text-align: center;
+    padding-top: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  svg{
+    color: #fff;
+
+  }
+}
+
 @media (max-width: 992px) {
   .visible-pc {
     display: none;

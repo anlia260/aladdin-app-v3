@@ -1,7 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
 import Web3 from 'web3'
 import { isAddress, AddressZero } from './index'
-import WalletConnectProvider from '@walletconnect/web3-provider'
+// import WalletConnectProvider from '@walletconnect/web3-provider'
 import config from 'config'
 import abi from 'config/abi'
 
@@ -45,7 +45,10 @@ function initProvider() {
 
 // 初始化 web3
 export function initWeb3(Provider) {
-  // if (web3) return web3
+  if (Provider) {
+    web3 = null;
+  }
+  if (web3) return web3
   web3 = new Web3(Provider || initProvider());
   web3.eth.extend({
     methods: [

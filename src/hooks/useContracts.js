@@ -1,20 +1,24 @@
 /* eslint-disable import/prefer-default-export */
 import { useMemo, useContext } from 'react'
-import config from '../config'
-import abi from '../config/abi'
-import { Web3Context } from 'context/Web3Context'
 import { getContract, initWeb3 } from '../utils/contract'
 
-// returns null on errors
+let cache = {};
 export function useContract(address, ABI) {
-  const { currentAccount, web3 } = useContext(Web3Context)
-  return useMemo(() => {
-    if (!address || !ABI || !web3) return null
-    try {
-      return getContract(address, ABI, web3, currentAccount)
-    } catch (error) {
-      console.error('Failed to get contract', error)
-      return null
+  const web3 = initWeb3();
+  const owner = web3.currentProvider.selectedAddress;
+  let contract = cache[address];
+  if (cache[address]) {
+    if (contract.options.from !== owner) {
+      contract.options.from = owner;
     }
-  }, [address, ABI, web3, currentAccount])
+    return contract;
+  }
+  contract = new web3.eth.Contract(ABI);
+  contract.options.address = address;
+  if (owner) {
+    contract.options.from = owner;
+  }
+
+  cache[address] = contract;
+  return contract;
 }

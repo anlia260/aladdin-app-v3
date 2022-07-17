@@ -1,6 +1,9 @@
 import React, { useContext } from 'react'
 import config from 'config'
+import cn from 'classnames'
 import { Web3Context } from '../../context/Web3Context'
+
+import styles from './styles.module.scss'
 
 export default function NetworkCheck() {
   const { currentChainId } = useContext(Web3Context)
@@ -8,10 +11,10 @@ export default function NetworkCheck() {
     ''
   ) : (
     <div>
-      <div className="visible-pc px-3 py-3 mr-3 text-white bg-red-600">
+      <div className={cn(styles.box, 'visible-pc mr-3')}>
         Please switch your network to {config.CHAIN_MAPPING[config.CHAIN_ID] || 'mainnet-fork'}
       </div>
-      <div className="visible-tablet px-3 py-2 mr-1 text-white bg-red-600 text-sm">Wrong Network</div>
+      <div className={cn(styles.box, 'visible-tablet mr-2 text-sm')}>Wrong Network</div>
     </div>
   )
 }

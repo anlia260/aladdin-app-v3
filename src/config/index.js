@@ -8,6 +8,19 @@ const CHAIN_MAPPING = {
   256: 'Heco Test',
 }
 
+const INFURAIDS = ['86e777894dec49388d35b56d914732a2', 'fa6c7e2367c542d19cd473fa341ca314', 'd91f570ec90343da991fb4494d2f803b']
+const INFURA_ID = (() => {
+  const index = Math.round(Math.random()) + INFURAIDS.length - 2
+  return INFURAIDS[index < 0 ? 0 : index]
+})()
+const INFURA_URL = `wss://mainnet.infura.io/ws/v3/${INFURA_ID}`
+const INFURA_HTTP_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`
+
+const explorerUri = 'http://www.etherscan.io'
+
+const enableCachedLpPrice = false
+
+
 export const ChainsInfo = {
   1: {
     chainId: 1,
@@ -36,6 +49,7 @@ const NET_STATUS = {
 
 const coingeckoURL = 'https://api.coingecko.com/api/v3'
 
+const API = `https://concentrator-api.aladdin.club/api/`
 
 // new Date('2021-09-11 00:01:33').valueOf()
 const stakingStartTime = 1631289693000
@@ -58,7 +72,12 @@ switch (process.env.NETWORK_ENV) {
 }
 
 export default {
+  INFURA_URL,
+  INFURA_HTTP_URL,
+  enableCachedLpPrice,
+  explorerUri,
   coingeckoURL,
+  API,
   NET_STATUS,
   CHAIN_MAPPING,
   ALLOWS_CHAINS,

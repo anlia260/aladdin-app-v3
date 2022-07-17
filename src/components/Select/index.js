@@ -32,7 +32,7 @@ export default function Select(props) {
       <div className={styles.selectBox}>
         <div className={cn(styles.select, 'flex justify-between items-center')} onClick={() => setOptionVisible(prev => !prev)}>
           <div>{value}</div>
-          <img src={ArrowDown} className="w-6" />
+          <img src={ArrowDown} className="w-6" alt="arrow-down" />
         </div>
         {/* {optionVisible && ( */}
         <div className={cn(styles.options, optionVisible && styles.visible)}>

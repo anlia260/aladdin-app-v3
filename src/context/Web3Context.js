@@ -3,11 +3,11 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import Web3 from 'web3'
-import BigNumber from 'bignumber.js'
+import { useContract } from 'hooks/useContracts'
 import Web3Modal from 'web3modal'
 // @ts-ignore
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
+import CoinbaseWalletSDK from '@coinbase/wallet-sdk'
 // import { createAlchemyWeb3 } from "@alch/alchemy-web3"
 // @ts-ignore
 // import Fortmatic from "fortmatic";
@@ -17,7 +17,7 @@ import Authereum from 'authereum'
 // import { Bitski } from "bitski";
 import abi from '../config/abi'
 import config from '../config'
-import { initWeb3 } from '../utils/contract'
+import { initWeb3, getContract } from '../utils/contract'
 import { getETHPrice } from 'utils'
 
 const providerOptions = {
@@ -33,10 +33,10 @@ const providerOptions = {
   coinbasewallet: {
     package: CoinbaseWalletSDK,
     options: {
-      appName: "Conentrator",
+      appName: 'Conentrator',
       infuraId: config.INFURA_ID,
-      rpc: "",
-    }
+      rpc: '',
+    },
   },
   // torus: {
   //   package: Torus,
@@ -76,15 +76,16 @@ export const Web3Context = React.createContext({
   currentChainId: 0,
   chainBalance: 0,
   aldBalance: 0,
+  ctrBalance: 0,
   tokenPrice: {},
-  connectWallet: async () => { },
-  getChainBalance: async () => { },
-  getErc20Balance: async () => { },
-  getErc20BalanceInWei: async () => { },
-  getTotalSupply: async () => { },
-  resetAccount: async () => { },
-  updateAldBalance: async () => { },
-  updateChainBalance: async () => { },
+  connectWallet: async () => {},
+  getChainBalance: async () => {},
+  getErc20Balance: async () => {},
+  getErc20BalanceInWei: async () => {},
+  getTotalSupply: async () => {},
+  resetAccount: async () => {},
+  updateAldBalance: async () => {},
+  updateChainBalance: async () => {},
 })
 
 export const Web3ContextProvider = ({ children }) => {
@@ -100,7 +101,8 @@ export const Web3ContextProvider = ({ children }) => {
   const [currentNetworkId, setCurrentNetworkId] = useState(1)
   const [chainBalance, setChainBalance] = useState(0)
   const [aldBalance, setAldBalance] = useState(0)
-  const [tokenPrice, setTokenPrice] = useState({});
+  const [ctrBalance, setCtrBalance] = useState(0)
+  const [tokenPrice, setTokenPrice] = useState({})
   // const theme = useSelector(state => state.settings.theme)
   const { INFURA_URL } = config
   // const web3_Alc = createAlchemyWeb3("https://eth-mainnet.alchemyapi.io/v2/NYoZTYs7oGkwlUItqoSHJeqpjqtlRT6m");
@@ -170,11 +172,11 @@ export const Web3ContextProvider = ({ children }) => {
     } catch (err) {
       const isDev = process.env.NODE_ENV === 'development'
       const { INFURA_URL } = config
-      const _web3 = initWeb3(INFURA_URL);
+      const _web3 = initWeb3(INFURA_URL)
       // setWeb3Alc(new Web3(INFURA_URL))
       setWeb3(_web3)
       const networkId = await _web3.eth.net.getId()
-      console.log('setCurrentNetworkId', networkId)
+      // console.log('setCurrentNetworkId', networkId)
       setCurrentChainId(networkId)
 
       const chainId = await _web3.eth.chainId()
@@ -198,167 +200,85 @@ export const Web3ContextProvider = ({ children }) => {
     return currentBlockData
   }, [web3])
 
-  const getChainBalance = useCallback(async () => {
-    if (!currentAccount) return 0
-    const balanceRaw = await web3.eth.getBalance(currentAccount)
-    const balance = new BigNumber(balanceRaw).shiftedBy(-config.chainDecimal).toFixed(4)
-    return balance
+  const updateCtrBalance = async () => {
+    const tokenCRTContract = getContract(config.contracts.aladdinCTR, abi.AladdinCTRABI, web3, currentAccount)
+    const res = await tokenCRTContract.methods.balanceOf(currentAccount).call()
+    setCtrBalance(res)
+  }
+
+  useEffect(() => {
+    if (web3 && currentAccount) {
+      updateCtrBalance()
+    }
   }, [web3, currentAccount])
-
-  const getErc20Balance = useCallback(
-    async (contract, decimal) => {
-      if (!currentAccount) return 0
-      if (!contract) return 0
-      const balanceInWei = await contract.methods.balanceOf(currentAccount).call()
-      const balance = new BigNumber(balanceInWei).div(new BigNumber(10).pow(decimal)).toString()
-      return balance || 0
-    },
-    [web3, currentAccount],
-  )
-
-  const getErc20BalanceInWei = useCallback(
-    async contractAddress => {
-      if (web3 && currentAccount) {
-        const erc20 = await new web3.eth.Contract(abi.erc20ABI, contractAddress)
-        const balanceInWei = await erc20.methods.balanceOf(currentAccount).call()
-        return balanceInWei || 0
-      }
-    },
-    [web3, currentAccount],
-  )
-
-  const getTotalSupply = useCallback(
-    async contractAddress => {
-      if (web3) {
-        const erc20 = await new web3.eth.Contract(abi.erc20ABI, contractAddress)
-        const totalSupply = await erc20.methods.totalSupply().call()
-        return totalSupply
-      }
-    },
-    [web3],
-  )
-
-  const addOnBlockListener = useCallback(
-    (name, listener) => {
-      setOnBlockListeners(old => ({ ...old, [name]: listener }))
-    },
-    [setOnBlockListeners],
-  )
-
-  const removeOnBlockListener = useCallback(
-    name => {
-      setOnBlockListeners(old => {
-        delete old[name]
-        return old
-      })
-    },
-    [setOnBlockListeners],
-  )
 
   /* eslint-disable no-unreachable */
   /* eslint-disable no-await-in-loop */
   /* eslint-disable no-unused-vars */
   function pollingBlock() {
-    let start = false;
-    let newBlock = 0;
-    let callMap = new Map();
-    let stopTime; // poll 事件 索引
+    let start = false
+    let newBlock = 0
+    let callMap = new Map()
+    let stopTime // poll 事件 索引
 
     async function poll(isUpdate) {
       // 要优化 就是 用 wss
       try {
-
         const blockNumberChain = await web3.eth.getBlockNumber()
+        const blockTime = await web3.eth.getBlock(blockNumberChain)
+        console.log('blockTime--', blockTime.timestamp)
         // console.log('blockNumberChain----111---', blockNumberChain)
         if (newBlock < blockNumberChain || isUpdate) {
           // console.log(callMap.size)
-          newBlock = blockNumberChain;
+          newBlock = blockNumberChain
 
           for (let [key] of callMap) {
             if (key instanceof Function) {
-              key(newBlock);
+              key(newBlock)
             }
           }
         }
       } catch (error) {
-        console.log(error.message); // 区块同步报错 通知客户端
+        console.log(error.message) // 区块同步报错 通知客户端
       }
 
       if (start) {
-        stopTime = setTimeout(poll, 3000);
+        stopTime = setTimeout(poll, 3000)
       }
     }
 
     return {
       start(call) {
-        if (!call) return;
+        if (!call) return
 
         if (start === false) {
           // console.log(call)
-          start = true;
-          poll(true);
+          start = true
+          poll(true)
         }
 
-        if (callMap.has(call)) return;
-        callMap.set(call, true);
+        if (callMap.has(call)) return
+        callMap.set(call, true)
       },
 
       remove(call) {
-        if (!call) return;
+        if (!call) return
 
         if (callMap.has(call)) {
-          callMap.delete(call);
+          callMap.delete(call)
         }
 
         if (callMap.size === 0) {
-          start = false;
-          clearTimeout(stopTime);
+          start = false
+          clearTimeout(stopTime)
         }
       },
 
-      getNewBlock: () => newBlock
-    };
+      getNewBlock: () => newBlock,
+    }
   }
 
-  const getBlock = pollingBlock();
-
-  // useEffect(() => {
-  //   if (web3 && currentChainId === config.CHAIN_ID) {
-  //     let subscribe = null
-  //     const onBlock = async block => {
-  //       // eslint-disable-next-line no-restricted-syntax
-  //       for (const listener of Object.entries(onBlockListeners)) {
-  //         // eslint-disable-next-line no-await-in-loop
-  //         await listener[1]?.(block)
-  //       }
-  //       // console.log('current block height', block.number)
-  //       if (currentBlock !== block.number) {
-  //         setCurrentBlock(block.number)
-  //       }
-  //     }
-  //     subscribe = web3.eth.subscribe('newBlockHeaders', (error, result) => {
-  //       onBlock(result)
-  //     })
-  //     return () => {
-  //       if (subscribe) {
-  //         subscribe.unsubscribe((error, success) => {
-  //           if (error) {
-  //             console.error(error)
-  //             return
-  //           }
-  //           // console.log(success)
-  //         })
-  //       }
-  //     }
-  //   }
-  // }, [provider, currentChainId, onBlockListeners])
-
-  // Todo:: change to use wei
-  const updateChainBalance = async () => {
-    const balance = await getChainBalance()
-    setChainBalance(`${balance} ${config.chainUnit}`)
-  }
-
+  const getBlock = pollingBlock()
 
   return (
     <Web3Context.Provider
@@ -372,16 +292,11 @@ export const Web3ContextProvider = ({ children }) => {
         currentChainId,
         chainBalance,
         aldBalance,
+        ctrBalance,
         tokenPrice,
+        updateCtrBalance,
         connectWallet,
-        getChainBalance,
-        getErc20Balance,
-        getErc20BalanceInWei,
-        getTotalSupply,
         resetAccount,
-        addOnBlockListener,
-        removeOnBlockListener,
-        updateChainBalance,
         getCurrentBlock,
         getBlock,
       }}

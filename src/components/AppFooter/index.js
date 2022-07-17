@@ -52,14 +52,14 @@ export default function AppFooter() {
                 <a
                   rel="noopener noreferrer"
                   target="_blank"
-                  href="https://aladdin.club/audits/PeckShield-Audit-Report-AladdinV3Concentrator-v1.0.pdf"
+                  href="/audits/PeckShield-Audit-Report-AladdinDAO-Concentrator-v1.0-20220704.pdf"
                 >
-                  <img src="/resources/images/audits/peckshield.png" />
+                  <img src="/resources/images/audits/peckshield.png" alt="peckshield" />
                 </a>
               </li>
               <li>
-                <a rel="noopener noreferrer" target="_blank" href="https://aladdin.club/audits/AladdinDao_V3_Report_Secbit.pdf">
-                  <img src="/resources/images/audits/secbit.jpg" />
+                <a rel="noopener noreferrer" target="_blank" href="/audits/SECBIT_Concentrator_IFO_Report_v1.2_20220701.pdf">
+                  <img src="/resources/images/audits/secbit.jpg" alt="secbit" />
                 </a>
               </li>
             </ul>

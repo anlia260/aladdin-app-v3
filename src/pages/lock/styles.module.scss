@@ -1,0 +1,155 @@
+@import "../../mixins.scss";
+
+.vaultPage {
+  background: #000015;
+  // padding-bottom: px;
+}
+
+.actionBoard {
+  background: rgba(6, 26, 75, 1);
+
+  .boardTitle {
+    color: #fff;
+    font-weight: 500;
+    font-size: 28px;
+    padding-bottom: 32px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid rgba(0, 93, 234, 1);
+  }
+}
+
+.vaultsInfos {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  // justify-content: space-between;
+  margin: 16px auto;
+  font-size: 18px;
+  color: $blue;
+  font-weight: 300;
+}
+
+.vaultsInfo {
+  width: 100%;
+  text-align: center;
+  // padding: 24px 0;
+  transition: all 0.3s;
+  text-align: left;
+  // &:hover {
+  //   .vaultsInfoTitle {
+  //     color: #fff;
+  //   }
+  // }
+}
+
+.vaultsInfoTitle {
+  font-size: 20px;
+  color: $blue;
+  margin-bottom: 8px;
+}
+
+.vaultsInfoValue {
+  font-size: 32px;
+  font-weight: 500;
+  color: #fff;
+  transition: all 0.3s;
+}
+
+.divider{
+  background: rgba(0, 93, 234, 1);
+  height: 1px;
+  width: 100%;
+}
+
+.poolsWrapper {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: flex-start;
+  .poolsList {
+    width: 100%;
+  }
+  .poolsListHeader {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr 1fr 1fr 32px;
+    font-weight: 100;
+    color: $blue;
+    font-size: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+    padding: 0 32px;
+  }
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  height: 200vh;
+  background: #000;
+}
+
+@media (max-width: 992px) {
+  // .vaultsInfos {
+  //   flex-wrap: wrap;
+  // }
+  .slogan {
+    font-size: 24px;
+  }
+
+  .vaultsInfo {
+    // width: 100%;
+    padding: 12px 0;
+  }
+  .vaultsInfoTitle {
+    font-size: 20px;
+  }
+
+  .vaultsInfoValue {
+    font-size: 18px;
+  }
+  .poolsWrapper {
+    flex-wrap: wrap;
+    .poolsList {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .slogan {
+    font-size: 20px;
+  }
+  .poolsWrapper {
+    .poolsListHeader {
+      grid-template-columns: 120px 1fr 1fr 1fr 24px;
+      font-size: 14px;
+      margin-bottom: 12px;
+      padding: 0 20px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .vaultsInfoTitle {
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .vaultsInfoValue {
+    font-size: 16px;
+  }
+  .poolsWrapper {
+    .poolsListHeader {
+      grid-template-columns: 110px 1fr 1fr 16px;
+      div:nth-child(4) {
+        display: none;
+      }
+    }
+  }
+}

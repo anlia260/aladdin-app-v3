@@ -15,15 +15,15 @@ const useTokens = (addresses, options) => {
     try {
       const ethBalance = await web3.eth.getBalance(currentAccount)
       const tokenContracts = (addresses || [])
-        .filter(i => i != config.zeroAddress)
+        .filter(i => i !== config.zeroAddress)
         .map(address => getContract(address, abis.erc20ABI, web3, currentAccount))
       const calls = tokenContracts.map(i => i.methods.balanceOf(currentAccount))
       const res = await multiCall(web3, currentAccount, ...calls)
 
-      const ethIndex = options.findIndex(i => i.address == config.zeroAddress)
+      const ethIndex = options.findIndex(i => i.address === config.zeroAddress)
 
       const list = res.map((i, index) => ({
-        symbol: options.filter(i => i.address != config.zeroAddress)[index].symbol,
+        symbol: options.filter(i => i.address !== config.zeroAddress)[index].symbol,
         balance: i,
       }))
 
@@ -42,7 +42,7 @@ const useTokens = (addresses, options) => {
   }
 
   useEffect(() => {
-    if (checkChain == CHAINSTATUS["checkUser"]) {
+    if (checkChain === CHAINSTATUS["checkUser"]) {
       fetchUserInfo()
     }
   }, [web3, getBlockNumber()])
@@ -78,8 +78,14 @@ export const useToken = (address, refreshTrigger, contractType) => {
           case 'vaultIFO':
             _contractAddress = config.contracts.concentratorIFOVault;
             break;
+          case 'vaultIFOZAP':
+            _contractAddress = config.contracts.aladdinConcentratorGateway;
+            break;
           case 'liquidity':
-            _contractAddress = config.contracts.aladdinConcentratorLiquidityGauge;
+            _contractAddress = config.contracts.aladdinBalancerLPGauge;
+            break;
+          case 'liquidityZAP':
+            _contractAddress = config.contracts.aladdinBalancerLPGaugeGateway;
             break;
           default:
             _contractAddress = config.contracts.convexVault;

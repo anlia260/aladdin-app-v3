@@ -98,13 +98,13 @@ export default function Input(props) {
     if (!fixPercent) {
       setPercent(0)
     }
-    let _value = e.target.value;
-    const valString = new RegExp(/,/g);
+    let _value = e.target.value
+    const valString = new RegExp(/,/g)
     if (valString.test(_value)) {
-      _value = _value.replace(/,/g, '');
+      _value = _value.replace(/,/g, '')
     }
 
-    if(value === '0' && _value.indexOf('.') === -1){
+    if (value === '0' && _value.indexOf('.') === -1) {
       _value = _value.slice(1)
     }
 

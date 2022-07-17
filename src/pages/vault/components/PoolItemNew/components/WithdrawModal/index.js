@@ -1,36 +1,36 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react'
 import Modal from 'components/Modal'
 import Input, { Info } from 'components/Input'
-import { Web3Context } from 'context/Web3Context'
-import config from 'config'
-import abi from 'config/abi'
-import { useContract } from 'hooks/useContracts'
+// import { Web3Context } from 'context/Web3Context'
+// import config from 'config'
+// import abi from 'config/abi'
+// import { useContract } from 'hooks/useContracts'
 import Button from 'components/Button'
 import Tip from 'components/Tip'
-import { cBN, basicCheck, formatBalance, numberToString } from 'utils'
+import { cBN, formatBalance } from 'utils'
 import NoPayableAction, { noPayableErrorAction } from 'utils/noPayableAction'
 import styles from './styles.module.scss'
 import useWeb3 from 'hooks/useWeb3'
 import cryptoIcons from 'assets/crypto-icons-stack.svg'
-import useConvexVaultIFO from 'pages/vault/hook/useConvexVaultIFO';
-import useAcrv from 'pages/vault/hook/useACrv';
+import VAULTNEW from 'config/contract/VAULTNEW'
+import useActionBoard from 'pages/vault/controllers/useActionBoard'
 const crvLogo = `${cryptoIcons}#crv`
 
 export default function WithdrawModal(props) {
-  const { harvestVault } = useConvexVaultIFO();
-  const { fetchCotractInfo } = useAcrv()
-  const { currentAccount, web3 } = useContext(Web3Context)
-  const { getBlockNumber, checkChain, CHAINSTATUS, currentBlock } = useWeb3()
-  const { onCancel, info, setRefreshTrigger, harvestList } = props
+  const vaultIFOContract = VAULTNEW()
+  const { getBlockNumber, currentAccount, checkChain, CHAINSTATUS, currentBlock } = useWeb3()
+  const { onCancel, info, setRefreshTrigger: setPropsRefreshTrigger, harvestList } = props
   const [withdrawAmount, setWithdrawAmount] = useState()
   const [withdrawing, setWithdrawing] = useState(false)
   const [harvesting, setHarvesting] = useState(false)
-  const vaultIFOContract = useContract(config.contracts.concentratorIFOVault, abi.AladdinConcentratorContVaultABI)
+
   const [userInfo, setUserInfo] = useState({
     shares: 0,
   })
-  const [rewarcAcrv, setRewarcAcrv] = useState(0);
+  const [rewarcAcrv, setRewarcAcrv] = useState(0)
   const { totalUnderlying, totalShare } = info
+  const [refreshTrigger, setRefreshTrigger] = useState(1)
+  const { acrvInfo } = useActionBoard({ refreshTrigger })
   const earned = cBN(totalUnderlying)
     .div(totalShare)
     .multipliedBy(userInfo.shares)
@@ -45,40 +45,58 @@ export default function WithdrawModal(props) {
     })
     try {
       const harvestData = await vaultIFOContract.methods.harvest(info.id, currentAccount, 0).call()
-      // console.log('harvestData---',harvestData)
-      // console.log('shares---',shares)
-      // console.log('totalShare---',totalShare)
-
-      const acrvInfo = await fetchCotractInfo();
-      const { totalUnderlying: acrvTotalUnderlying, totalSupply: acrvTotalSupply } = acrvInfo;
-      const _fee = cBN(1).minus(0.005).minus(0.005);
-      const rewarCvxCrv = harvestData ? cBN(shares).div(totalShare).multipliedBy(harvestData).multipliedBy(_fee) : 0
-      // const rate = acrvTotalSupply * 1 ? cBN(acrvTotalUnderlying).div(acrvTotalSupply) : 1
+      // const acrvInfo = await fetchCotractInfo();
+      const { totalUnderlying: acrvTotalUnderlying, totalSupply: acrvTotalSupply } = acrvInfo
+      const _fee = cBN(1)
+        .minus(0.005)
+        .minus(0.005)
+      const rewarCvxCrv = harvestData
+        ? cBN(shares)
+          .div(totalShare)
+          .multipliedBy(harvestData)
+          .multipliedBy(_fee)
+        : 0
+      const rate = acrvTotalSupply * 1 ? cBN(acrvTotalUnderlying).div(acrvTotalSupply) : 1
       // console.log('index---',rate.toString(10))
-      const rewarcAcrv = harvestData
+      const rewarcAcrv = rewarCvxCrv ? rewarCvxCrv.div(rate) : 0
       setRewarcAcrv(rewarcAcrv)
     } catch (e) {
+      // console.log('e---', e)
       setRewarcAcrv(0)
     }
   }, [info.id])
 
   useEffect(async () => {
-    if (checkChain !== CHAINSTATUS["checkUser"]) return;
+    if (checkChain !== CHAINSTATUS['checkUser']) return
     if (vaultIFOContract && info && info.name) {
       await getPidInfo()
     }
   }, [getBlockNumber(), checkChain])
 
-
   const handleHarvest = async () => {
     setHarvesting(true)
-    await harvestVault(info.id)
+    const reward = await vaultIFOContract.methods.harvest(info.id, currentAccount, 0).call({ from: currentAccount, gas: 5000000 })
+    if (reward * 1) {
+      const _reward = cBN(reward)
+        .multipliedBy(9)
+        .div(10)
+        .toFixed(0)
+      const apiCall = await vaultIFOContract.methods.harvest(info.id, currentAccount, _reward)
+      const estimatedGas = await apiCall.estimateGas({ from: currentAccount })
+      const gas = parseInt(estimatedGas * 1.2, 10) || 0
+      await NoPayableAction(() => apiCall.send({ from: currentAccount, gas }), {
+        key: 'harvestVault',
+        action: 'harvest',
+      })
+      setPropsRefreshTrigger(prev => prev + 1)
+    }
+
     setHarvesting(false)
     await getPidInfo()
   }
 
   const handleWithdraw = async () => {
-    if (checkChain !== CHAINSTATUS["checkUser"]) return;
+    if (checkChain !== CHAINSTATUS['checkUser']) return
     setWithdrawing(true)
     const sharesInWei = withdrawAmount.toNumber()
       ? cBN(withdrawAmount)
@@ -102,7 +120,7 @@ export default function WithdrawModal(props) {
       })
       onCancel()
       setWithdrawing(false)
-      setRefreshTrigger(prev => prev + 1)
+      setPropsRefreshTrigger(prev => prev + 1)
     } catch (error) {
       // console.log(error)
       setWithdrawing(false)
@@ -131,12 +149,15 @@ export default function WithdrawModal(props) {
         token={info.stakeTokenSymbol}
         vaultWithdrawFee={`${info.withdrawFeePercentage ? formatBalance(info.withdrawFeePercentage, 7) : '-'}%`}
       />
+      <div className='-mt-2'>
+        Fee may be lower after IFO. See see <a href="https://docs.aladdin.club/concentrator/ifo-vaults" target="_blank" className='color-white underline'>gitbook</a> for details.
+      </div>
       <div className="mt-20 flex items-center gap-1">
         <span className={styles.harvestHint}>
           Harvest
         </span>
         <Tip placement="top" color="#5ad0ff" title="Harvesting happens periodically without user intervention so normally manual harvest is not necessary.  Triggering a harvest before withdrawal ensures you get the maximum amount, but costs gas and may not be worth it." />
-        <Info name="before withdraw will get" value={`${formatBalance(rewarcAcrv, 18, 6)} CTR`} />
+        <Info name="before withdraw will get" value={`${formatBalance(rewarcAcrv, 18, 6)} aCRV`} />
       </div>
       <div className={styles.actions}>
         <Button theme="lightBlue" loading={harvesting} onClick={handleHarvest} disabled={!rewarcAcrv * 1}>

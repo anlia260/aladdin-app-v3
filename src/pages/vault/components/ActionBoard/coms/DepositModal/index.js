@@ -4,10 +4,13 @@ import Modal from 'components/Modal'
 import Input from 'components/Input'
 import Select from 'components/Select'
 import config from 'config'
-import { basicCheck, formatBalance, fb4, cBN, numberToString } from 'utils'
+import { basicCheck, formatBalance, cBN, numberToString } from 'utils'
 import NoPayableAction, { noPayableErrorAction } from 'utils/noPayableAction'
 import Button from 'components/Button'
-import useACrv from 'pages/vault/hook/useACrv'
+import useActionBoard from 'pages/vault/controllers/useActionBoard'
+import ACRV from 'config/contract/ACRV'
+import CVXCRV from 'config/contract/CVXCRV'
+import CRV from 'config/contract/CRV'
 import styles from './styles.module.scss'
 
 const DepositModal = props => {
@@ -17,7 +20,12 @@ const DepositModal = props => {
   const [selectToken, setSelectToken] = useState('cvxCRV')
   const selectOption = ['cvxCRV', 'CRV']
   const { currentAccount, web3 } = useContext(Web3Context)
-  const { userInfo, acrvInfo, cvxCrvContract, crvContract, aCrvContract } = useACrv(refreshTrigger)
+  const aCrvContract = ACRV()
+  const cvxCrvContract = CVXCRV()
+  const crvContract = CRV()
+
+  const { userInfo, acrvInfo } = useActionBoard({ refreshTrigger })
+
   const { userCvxCrvBalance, userCvxCrvAllowance, userCrvBalance, userCrvAllowance } = userInfo
   const [depositAmount, setDepositAmount] = useState()
   const [depositNum, setDepositNum] = useState(0)

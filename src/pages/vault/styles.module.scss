@@ -26,8 +26,25 @@
   margin: 44px 0 64px;
 }
 
+.bannerText{
+  color: $yellow;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  position: relative;
+  top: 40px;
+}
+
+.ifoTag{
+  color: #fff;
+  padding: 0 8px;
+  background: $yellow;
+}
+
 .vaultDesc {
   color: $blue;
+  background: rgba(6, 26, 75, 0.8);
+  padding: 32px;
   font-size: 16px;
   line-height: 28px;
 }
@@ -53,6 +70,8 @@
   background: rgba(2, 14, 45, 0.8);
 }
 
+
+
 .vaultsInfoTitle {
   font-size: 28px;
   color: $blue;
@@ -67,7 +86,7 @@
 
 .liquidityListHeader {
   display: grid;
-  grid-template-columns: 200px 1fr 1fr 1fr 1fr 32px;
+  grid-template-columns: 260px 1fr 1fr 1fr 1fr 32px;
   font-weight: 100;
   color: $blue;
   font-size: 16px;
@@ -75,7 +94,7 @@
   text-align: center;
   padding: 0 32px;
   @media (min-width: 1536px) {
-    grid-template-columns: 200px 1fr 1fr 1fr 1fr 120px;
+    grid-template-columns: 260px 1fr 1fr 1fr 1fr 120px;
   }
   @media (max-width: 768px) {
     grid-template-columns: 120px 1fr 1fr 1fr 1fr 24px;
@@ -83,16 +102,16 @@
   }
 
   @media (max-width: 576px) {
-    grid-template-columns: 110px 1fr 1fr 1fr 16px;
-    div:nth-child(4) {
-      display: none;
-    }
+    grid-template-columns: 110px 1fr 1fr 1fr 1fr 16px;
+    // div:nth-child(4) {
+    //   display: none;
+    // }
   }
 }
 
 .poolsWrapper {
   display: flex;
-  gap: 20px;
+  gap: 10px;
   justify-content: space-between;
   align-items: flex-start;
   .poolsList {
@@ -100,7 +119,7 @@
   }
   .poolsListHeader {
     display: grid;
-    grid-template-columns: 200px 1fr 1fr 1fr 32px;
+    grid-template-columns: 200px 1fr 1fr 1fr 1fr 32px;
     font-weight: 100;
     color: $blue;
     font-size: 16px;
@@ -111,7 +130,7 @@
 
   @media (min-width: 1536px) {
     .poolsListHeader {
-      grid-template-columns: 200px 1fr 1fr 1fr 120px;
+      grid-template-columns: 200px 1fr 1fr 1fr 1fr 120px;
     }
   }
 }
@@ -163,12 +182,19 @@ body {
 }
 
 @media (max-width: 768px) {
+  .scrollOut{
+    width: 100%;
+    overflow-x: auto;
+    .scrollIn{
+      width: 600px;
+    }
+  }
   .slogan {
     font-size: 20px;
   }
   .poolsWrapper {
     .poolsListHeader {
-      grid-template-columns: 120px 1fr 1fr 1fr 24px;
+      grid-template-columns: 120px 1fr 1fr 1fr 1fr 24px;
       font-size: 14px;
       margin-bottom: 12px;
       padding: 0 20px;
@@ -186,10 +212,10 @@ body {
   }
   .poolsWrapper {
     .poolsListHeader {
-      grid-template-columns: 110px 1fr 1fr 16px;
-      div:nth-child(4) {
-        display: none;
-      }
+      grid-template-columns: 110px 1fr 1fr 1fr 1fr 16px;
+      // div:nth-child(4) {
+      //   display: none;
+      // }
     }
   }
 }

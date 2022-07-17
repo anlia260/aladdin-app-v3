@@ -5,8 +5,6 @@ import Input from 'components/Input'
 import Button from 'components/Button'
 import TokenSelect from 'components/TokenSelect'
 import config from 'config'
-import { useUserPoolInfo } from 'pages/vault/hook/useConvexVault'
-import useLiquidityMining from 'pages/vault/hook/useLiquidityMining'
 import { useDebounceEffect } from 'ahooks'
 import NoPayableAction, { noPayableErrorAction } from 'utils/noPayableAction'
 import { cBN, basicCheck, formatBalance } from 'utils'
@@ -14,15 +12,22 @@ import { useToken } from 'pages/vault/hook/useTokenInfo'
 import styles from './styles.module.scss'
 import cryptoIcons from 'assets/crypto-icons-stack.svg'
 import ZapInfo from 'components/ZapInfo'
+import BALANCERLPGAUGEGATAWAY, { getBALANCERLPGAUGEGATAWAYAddress } from 'config/contract/BALANCERLPGAUGEGATAWAY'
+import BALANCERLPGAUGE, { getBALANCERLPGAUGEAddress } from 'config/contract/BALANCERLPGAUGE'
+import useLiquidityMining from 'pages/vault/controllers/useLiquidityMining'
+import useCtrPrice from 'pages/vault/controllers/useCtrPrice'
 const crvLogo = `${cryptoIcons}#crv`
 
 export default function LiquidityDepositModal(props) {
   const { currentAccount, web3 } = useContext(Web3Context)
   const { onCancel, info } = props
-
+  const BALANCERLPGAUGEGATAWAYContract = BALANCERLPGAUGEGATAWAY()
+  const BALANCERLPGAUGEAddress = getBALANCERLPGAUGEAddress()
+  const BALANCERLPGAUGEGATAWAYAddress = getBALANCERLPGAUGEGATAWAYAddress()
   const [refreshTrigger, setRefreshTrigger] = useState(0)
-  const { vaultContract } = useUserPoolInfo(info, refreshTrigger)
-  const { AladdinConcetratorLiquidityGaugeContract } = useLiquidityMining();
+  const { updateCtrCrvBalancer } = useLiquidityMining();
+  const { lpPrice } = useCtrPrice()
+  const BALANCERLPGAUGEContract = BALANCERLPGAUGE();
   const [selectToken, setSelectToken] = useState(info.zapTokens[0])
 
   const [depositAmount, setDepositAmount] = useState()
@@ -32,28 +37,30 @@ export default function LiquidityDepositModal(props) {
   const [minAmount, setMinAmount] = useState(0)
   const [minAmountTvl, setMinAmountTvl] = useState(0)
 
-  const selectTokenInfo = useToken(selectToken.address, refreshTrigger, 'liquidity')
+  const isSelfLp = info.stakeTokenContractAddress === selectToken.address
+  const selectTokenInfo = useToken(selectToken.address, refreshTrigger, isSelfLp ? 'liquidity' : 'liquidityZAP')
   const tokenContract = selectTokenInfo.contract
   const userTokenBalance = selectTokenInfo.balance
-  const canDeposit = selectTokenInfo.allowance > 0
+  const canDeposit = selectTokenInfo.allowance > 0 && cBN(depositAmount).isLessThanOrEqualTo(selectTokenInfo.allowance)
+  const needClear = selectTokenInfo.allowance > 0 && cBN(depositAmount).isGreaterThan(selectTokenInfo.allowance)
 
-  const isSelfLp = info.stakeTokenContractAddress === selectToken.address
-  const { totalUnderlying, totalShare, lpTokenPrice } = info;
+  // const { lpPrice = 1 } = priceObj;
+  console.log('lpPrice----', lpPrice)
   useDebounceEffect(
     async () => {
       let depositAmountInWei = cBN(depositAmount || 0).toFixed(0)
       if (canDeposit && !cBN(depositAmountInWei).isZero() && !isSelfLp) {
         // console.log('info.id,depositAmountInWei', info.id, selectToken.address, depositAmountInWei)
-        const shares = await AladdinConcetratorLiquidityGaugeContract.methods
-          .deposit(depositAmountInWei)
+        const shares = await BALANCERLPGAUGEGATAWAYContract.methods
+          .deposit(selectToken.address, depositAmountInWei, selectToken.routes, 0)
           .call({ from: currentAccount, value: config.zeroAddress == selectToken.address ? depositAmountInWei : 0 })
 
-        let _shares = cBN(totalUnderlying).div(totalShare).times(shares)
-        _shares = isNaN(_shares.toFixed(0)) ? cBN(0) : _shares
-        let _sharesTvl = _shares.times(lpTokenPrice)
+        // let _shares = cBN(totalUnderlying).div(totalShare).times(shares)
+        // _shares = isNaN(_shares.toFixed(0)) ? cBN(0) : _shares
+        let _sharesTvl = cBN(shares).times(lpPrice)
         _sharesTvl = isNaN(_sharesTvl.toFixed(0)) ? cBN(0) : _sharesTvl
         setMinAmountTvl(_sharesTvl.toFixed(0))
-        setMinAmount(_shares.toFixed(0))
+        setMinAmount(shares)
         // console.log('share', formatBalance(shares, 18))
       } else {
         setMinAmount(0)
@@ -66,17 +73,30 @@ export default function LiquidityDepositModal(props) {
     },
   )
 
-  const handleApprove = async () => {
+  const handleApprove = async (needClear) => {
     if (!basicCheck(web3, currentAccount)) return
     setApproving(true)
     try {
-      console.log('config.contracts.aladdinConcentratorLiquidityGauge--', config.contracts.aladdinConcentratorLiquidityGauge)
+      // 需要取消授权
+      if (needClear === true) {
+        const apiCall0 = tokenContract.methods.approve(
+          isSelfLp ? BALANCERLPGAUGEAddress : BALANCERLPGAUGEGATAWAYAddress,
+          '0',
+        )
+        const estimatedGas0 = await apiCall0.estimateGas({ from: currentAccount })
+        const gas0 = parseInt(estimatedGas0 * 1.4, 10) || 0
+        await NoPayableAction(() => apiCall0.send({ from: currentAccount, gas: gas0 }), {
+          key: 'Approve',
+          action: 'Reset Approve',
+        })
+      }
+
       const apiCall = tokenContract.methods.approve(
-        config.contracts.aladdinConcentratorLiquidityGauge,
+        isSelfLp ? BALANCERLPGAUGEAddress : BALANCERLPGAUGEGATAWAYAddress,
         web3.utils.toWei('1000000000000000000', 'ether'),
       )
       const estimatedGas = await apiCall.estimateGas({ from: currentAccount })
-      const gas = parseInt(estimatedGas * 1.2, 10) || 0
+      const gas = parseInt(estimatedGas * 1.4, 10) || 0
       await NoPayableAction(() => apiCall.send({ from: currentAccount, gas }), {
         key: 'earn',
         action: 'approv',
@@ -96,12 +116,13 @@ export default function LiquidityDepositModal(props) {
     const minOut = (cBN(minAmount) || cBN(0)).multipliedBy(cBN(1).minus(cBN(slippage).dividedBy(100))).toFixed(0)
 
     try {
-      const apiCall = vaultContract.methods.zapAndDeposit(info.id, selectToken.address, depositAmountInWei, minOut)
+      const apiCall = await BALANCERLPGAUGEGATAWAYContract.methods
+        .deposit(selectToken.address, depositAmountInWei, selectToken.routes, minOut)
       const estimatedGas = await apiCall.estimateGas({
         from: currentAccount,
         value: config.zeroAddress == selectToken.address ? depositAmountInWei : 0,
       })
-      const gas = parseInt(estimatedGas * 1.2, 10) || 0
+      const gas = parseInt(estimatedGas * 1.4, 10) || 0
       await NoPayableAction(
         () =>
           apiCall.send({ from: currentAccount, gas, value: config.zeroAddress == selectToken.address ? depositAmountInWei : 0 }),
@@ -112,6 +133,7 @@ export default function LiquidityDepositModal(props) {
       )
       setDepositing(false)
       onCancel()
+      updateCtrCrvBalancer()
       setRefreshTrigger(prev => prev + 1)
       props.setRefreshTrigger(prev => prev + 1)
     } catch (error) {
@@ -122,25 +144,25 @@ export default function LiquidityDepositModal(props) {
   }
 
   const handleDeposit = async () => {
-    // if (!isSelfLp) {
-    //   // console.log('let us try to switch token')
-    //   handleZapDeposit()
-    //   return
-    // }
+    if (!isSelfLp) {
+      handleZapDeposit()
+      return
+    }
     if (!basicCheck(web3, currentAccount)) return
     setDepositing(true)
     const depositAmountInWei = cBN(depositAmount || 0).toFixed(0, 1)
 
     try {
-      const apiCall = AladdinConcetratorLiquidityGaugeContract.methods.deposit(depositAmountInWei.toString())
+      const apiCall = BALANCERLPGAUGEContract.methods.deposit(depositAmountInWei.toString())
       const estimatedGas = await apiCall.estimateGas({ from: currentAccount })
-      const gas = parseInt(estimatedGas * 1.2, 10) || 0
+      const gas = parseInt(estimatedGas * 1.4, 10) || 0
       await NoPayableAction(() => apiCall.send({ from: currentAccount, gas }), {
         key: 'acrv',
         action: 'deposit',
       })
       setDepositing(false)
       onCancel()
+      updateCtrCrvBalancer()
       setRefreshTrigger(prev => prev + 1)
       props.setRefreshTrigger(prev => prev + 1)
     } catch (error) {
@@ -151,7 +173,7 @@ export default function LiquidityDepositModal(props) {
   }
 
   const handleInputChange = val => setDepositAmount(val)
-  const canSubmit = cBN(depositAmount).isGreaterThan(0) && cBN(depositAmount).isLessThanOrEqualTo(userTokenBalance)
+  const canSubmit = cBN(depositAmount).isGreaterThan(0) && cBN(depositAmount).isLessThanOrEqualTo(cBN(userTokenBalance))
   const handleTokenSelect = token => {
     setMinAmount(0)
     setSelectToken(token)
@@ -163,7 +185,7 @@ export default function LiquidityDepositModal(props) {
         <div className={`color-light-blue ${styles.itemWrap}`}>
           <div className="relative">
             <img src={info.logo} alt={info.name} className="w-8 mr-2" />
-            <img src={crvLogo} alt={info.name} className="absolute w-4 h-4 right-1/3 bottom-0" />
+            {/* <img src={crvLogo} alt={info.name} className="absolute w-4 h-4 right-1/3 bottom-0" /> */}
           </div>
           {info.stakeTokenSymbol}
         </div>
@@ -203,8 +225,8 @@ export default function LiquidityDepositModal(props) {
             Deposit
           </Button>
         ) : (
-          <Button theme="lightBlue" onClick={handleApprove} loading={approving}>
-            Approve
+          <Button theme="lightBlue" onClick={() => handleApprove(needClear)} loading={approving}>
+            {needClear ? 'Reset Approve' : 'Approve'}
           </Button>
         )}
       </div>

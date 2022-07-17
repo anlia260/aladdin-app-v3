@@ -35,13 +35,13 @@ export default function TokenSelect(props) {
     }
   }
 
-  const renderIcon = (isLp, icon) => {
+  const renderIcon = (isLp, icon, hideCrv) => {
     const imgSrc = (icon.includes('static/media/') || icon.includes('data:')) ? icon : `${cryptoIcons}#${icon}`
     if (isLp) {
       return (
         <div className="relative">
-          <img src={imgSrc} className="w-6 mr-2" />
-          <img src={crvLogo} className="absolute w-3 h-3 right-1/3 bottom-0" />
+          <img src={imgSrc} className="w-6 mr-2" alt="icon" />
+          {!hideCrv && <img src={crvLogo} className="absolute w-3 h-3 right-1/3 bottom-0" alt="crv-logo" />}
         </div>
       )
     }
@@ -55,10 +55,10 @@ export default function TokenSelect(props) {
       <div className={styles.selectBox}>
         <div className={cn(styles.select, 'flex justify-between items-center')} onClick={() => setOptionVisible(prev => !prev)}>
           <div className="flex items-center">
-            {renderIcon(value.isLp, value?.icon)}
+            {renderIcon(value.isLp, value?.icon, value?.hideCrv)}
             {value?.symbol}
           </div>
-          <img src={ArrowDown} className="w-6" />
+          <img src={ArrowDown} className="w-6" alt="arrow-down" />
         </div>
         <div className={cn(styles.options, optionVisible && styles.visible)}>
           {options
@@ -74,7 +74,7 @@ export default function TokenSelect(props) {
                 )}
               >
                 <div className="flex items-center">
-                  {renderIcon(option.isLp, option?.icon)}
+                  {renderIcon(option.isLp, option?.icon, option?.hideCrv)}
                   {option?.symbol}
                 </div>
                 <div className="text-align-right">

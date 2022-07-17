@@ -11,6 +11,22 @@ import { initWeb3 } from '../utils/contract'
 import cachedLpPrice from '../config/cachedLpPrice'
 import vaults from '../config/convexVault'
 import abi from '../config/abi'
+import newRequst from './creatRrqust'
+import qs from 'qs'
+const {
+  get,
+  post
+} = newRequst()
+
+const URL_ROOT = config.API
+export function Get(url, data) {
+  return get(URL_ROOT + url, data)
+}
+
+export function Post(url, data) {
+  // console.log(URL_ROOT + url , data)
+  return post(URL_ROOT + url, JSON.stringify(data))
+}
 
 export const cBN = val => new BigNumber(val)
 
@@ -114,7 +130,15 @@ export const getCurveLPPrice2 = async (web3, lpAddress, swapPoolABI, swapPoolCon
     const lpTotalSupply = await lpTokenContract.methods.totalSupply().call()
     if (cBN(lpTotalSupply).isLessThanOrEqualTo(0)) return 0
     // console.log('[curve lp price]', lpAddress, 'lpTotalSupply', lpTotalSupply.toString())
-
+    // if (lpAddress.toLocaleLowerCase() == '0x5282a4eF67D9C33135340fB3289cc1711c13638C'.toLocaleLowerCase()) { //ironbank
+    //   const contractLpPair = new web3.eth.Contract(abi.UNI_V2_PAIR, lpAddress)
+    //   const _tokenPairObj = await contractLpPair.methods.getReserves().call()
+    //   const [tokenPairObj, lpToken0Address] = await Promise.all([
+    //     contractLpPair.methods.getReserves().call(),
+    //     contractLpPair.methods.token0().call(),
+    //   ])
+    //   console.log(tokenPairObj, lpToken0Address)
+    // }
     // Get Curve Vault Total Value
     let totalAssetValueInUSD = cBN(0)
     for (let i = 0; i < underlyingAssets.length; i += 1) {
@@ -123,7 +147,14 @@ export const getCurveLPPrice2 = async (web3, lpAddress, swapPoolABI, swapPoolCon
       let tokenPrice = 1
       const [tokenId, tokenAddress, tokenDecimal] = underlyingAssets[i]
       // for stablecoins, can use 1 directly to reduce the outside call
-      if (['dai', 'tether', 'usd-coin'].indexOf(tokenId) < 0) {
+      if (lpAddress.toLocaleLowerCase() === '0x5282a4eF67D9C33135340fB3289cc1711c13638C'.toLocaleLowerCase()) { //ironbank
+        const lpTokenInfoContract = new web3.eth.Contract(abi.erc20ABI, tokenAddress)
+        const tokenTotal = await lpTokenInfoContract.methods.balanceOf(swapPoolContractAddress).call()
+        const exchangeRateStoredContract = new web3.eth.Contract([abi.ironbankABI.exchangeRateStored], tokenAddress)
+        const exchangeRate = await exchangeRateStoredContract.methods.exchangeRateStored().call()
+        const _tokenDecimal = tokenId === 'cyDAI' ? 1e18 : 1e6
+        totalAssetValueInUSD = totalAssetValueInUSD.plus(cBN(tokenTotal).div(_tokenDecimal).times(cBN(exchangeRate).div(1e18)))
+      } else if (['dai', 'tether', 'usd-coin'].indexOf(tokenId) < 0) {
         tokenPrice = await getTokenPrice(tokenId)
         // console.log('[curve lp price]', lpAddress, 'underlyingAsset', i, 'tokenId', tokenId, 'tokenPrice', tokenPrice, 'assetBalanceInWei', assetBalanceInWei)
         totalAssetValueInUSD = totalAssetValueInUSD.plus(
@@ -133,148 +164,18 @@ export const getCurveLPPrice2 = async (web3, lpAddress, swapPoolABI, swapPoolCon
         totalAssetValueInUSD = totalAssetValueInUSD.plus(cBN(assetBalanceInWei).div(cBN(10).pow(tokenDecimal)))
       }
     }
-
     const lpDecimal = 18
+    // console.log('lpTotalSupply--', lpTotalSupply)
     lpPrice = cBN(totalAssetValueInUSD).div(cBN(lpTotalSupply).div(cBN(10).pow(lpDecimal))) // lp basiccly is 18 decimal
-    // console.log(
-    //   '[getCurveLPPrice2]',
-    //   lpAddress,
-    //   'totalAssetValueInUSD',
-    //   totalAssetValueInUSD.toString(),
-    //   'lp total supply',
-    //   lpTotalSupply.toString(),
-    //   'lpPrice',
-    //   lpPrice.toString(),
-    // )
     cacheTime = _currTime
     cachedLpPrice[lpAddress] = lpPrice;
   } catch (e) {
-    console.error('[getCurveLPPrice2]', lpAddress, e.toString())
+    console.error('[getCurveLPPrice2]', lpAddress, e)
   }
   return lpPrice
 }
 
-const curveLpInfo = {
-  [config.convexVaultPool.cvxcrv]: {
-    address: config.convexVaultPool.cvxcrv,
-    swapPoolABI: abi.curveCvxcrvPoolSwapABI,
-    swapPoolAddress: config.contracts.curveCvxcrvPoolSwap,
-    underlyingAssets: [
-      ['curve-dao-token', config.tokens.crv, 18],
-      ['convex-crv', config.tokens.cvxcrv, 18],
-    ],
-  },
-  [config.convexVaultPool.cvxfxs]: {
-    address: config.convexVaultPool.cvxfxs,
-    swapPoolABI: abi.curveCvxfxsPoolSwapABI,
-    swapPoolAddress: config.contracts.curveCvxfxsPoolSwap,
-    underlyingAssets: [
-      ['frax-share', config.tokens.fxs, 18],
-      ['frax-share', config.tokens.fxs, 18],
-    ],
-  },
-  [config.convexVaultPool.steth]: {
-    address: config.convexVaultPool.steth,
-    swapPoolABI: abi.curveStethPoolSwapABI,
-    swapPoolAddress: config.contracts.curveStethPoolSwap,
-    underlyingAssets: [
-      ['ethereum', config.tokens.eth, 18],
-      ['staked-ether', config.tokens.steth, 18],
-    ],
-  },
-
-  [config.convexVaultPool.frax]: {
-    address: config.convexVaultPool.frax,
-    swapPoolABI: abi.curveFraxPoolSwapABI,
-    swapPoolAddress: config.contracts.curveFraxPoolSwap,
-    underlyingAssets: [
-      ['frax', config.tokens.frax, 18],
-      ['lp-3pool-curve', config.tokens.crv3pool, 18],
-    ],
-  },
-
-  [config.convexVaultPool.tricrypto2]: {
-    address: config.convexVaultPool.tricrypto2,
-    swapPoolABI: abi.curveTricrypto2PoolSwapABI,
-    swapPoolAddress: config.contracts.curveTricrypto2PoolSwap,
-    underlyingAssets: [
-      ['usd-coin', config.tokens.usdt, 6],
-      ['bitcoin', config.tokens.wbtc, 8],
-      ['ethereum', config.tokens.eth, 18],
-    ],
-  },
-
-  [config.convexVaultPool.crveth]: {
-    address: config.convexVaultPool.crveth,
-    swapPoolABI: abi.curveCrvethPoolSwapABI,
-    swapPoolAddress: config.contracts.curveCrvethPoolSwap,
-    underlyingAssets: [
-      ['ethereum', config.tokens.eth, 18],
-      ['curve-dao-token', config.tokens.crv, 18],
-    ],
-  },
-
-  [config.convexVaultPool.cvxeth]: {
-    address: config.convexVaultPool.cvxeth,
-    swapPoolABI: abi.curveCvxethPoolSwapABI,
-    swapPoolAddress: config.contracts.curveCvxethPoolSwap,
-    underlyingAssets: [
-      ['ethereum', config.tokens.eth, 18],
-      ['convex-finance', config.tokens.cvx, 18],
-    ],
-  },
-
-  [config.convexVaultPool.crv3pool]: {
-    address: config.convexVaultPool.crv3pool,
-    swapPoolABI: abi.curve3PoolSwapABI,
-    swapPoolAddress: config.contracts.curve3PoolSwap,
-    underlyingAssets: [
-      ['dai', config.tokens.dai, 18],
-      ['usd-coin', config.tokens.usdc, 6],
-      ['tether', config.tokens.usdt, 6],
-    ],
-  },
-
-  [config.convexVaultPool['ust-wormhole']]: {
-    address: config.convexVaultPool['ust-wormhole'],
-    swapPoolABI: abi.curveUstWormholeSwapABI,
-    swapPoolAddress: config.contracts.curveUstWormholeSwap,
-    underlyingAssets: [
-      ['terrausd-wormhole', config.tokens['UST(Wormhole)'], 6],
-      ['lp-3pool-curve', config.tokens.crv3pool, 18],
-    ],
-  },
-
-  [config.convexVaultPool.rocketpooleth]: {
-    address: config.convexVaultPool.rocketpooleth,
-    swapPoolABI: abi.curveRocketPoolEthSwapABI,
-    swapPoolAddress: config.contracts.curveRocketPoolEthSwap,
-    underlyingAssets: [
-      ['rocket-pool-eth', config.tokens.rETH, 18],
-      ['wrapped-steth', config.tokens.wstETH, 18],
-    ],
-  },
-
-  [config.convexVaultPool.ren]: {
-    address: config.convexVaultPool.ren,
-    swapPoolABI: abi.curveRenABI,
-    swapPoolAddress: config.contracts.curveRenSwap,
-    underlyingAssets: [
-      ['renbtc', config.tokens.renBTC, 8],
-      ['wrapped-bitcoin', config.tokens.wbtc, 8],
-    ],
-  },
-
-  [config.convexVaultPool.pusd]: {
-    address: config.convexVaultPool.pusd,
-    swapPoolABI: abi.curvePusdPoolSwapABI,
-    swapPoolAddress: config.contracts.curvePusdPoolSwap,
-    underlyingAssets: [
-      ['pusd', config.tokens.PUSd, 18],
-      ['lp-3pool-curve', config.tokens.crv3pool, 18],
-    ],
-  },
-}
+const curveLpInfo = config.CONVEXVAULTPOOL_INFO
 
 export const getCurveLPPriceByTokenId = async (tvlPriceTokenId, web3) => {
   if (!web3) {
@@ -351,7 +252,7 @@ export async function getVaultTokenPrice(toeknInfo, tokenPriceLp) {
     } else {
       ;[lpPairTokenAddress] = await Promise.all([contractFactory.methods.getPair(token0, _usdtAddress).call()])
     }
-    if (lpPairTokenAddress != zeroAddress) {
+    if (lpPairTokenAddress !== zeroAddress) {
       const contractLpPair = new web3.eth.Contract(abi.UNI_V2_PAIR, lpPairTokenAddress)
       const [tokenPairObj, lpToken0Address] = await Promise.all([
         contractLpPair.methods.getReserves().call(),
@@ -359,7 +260,7 @@ export async function getVaultTokenPrice(toeknInfo, tokenPriceLp) {
       ])
       let token0Num = tokenPairObj.reserve0
       let tokenUsdtNum = tokenPairObj.reserve1
-      if (lpToken0Address.toUpperCase() == _usdtAddress.toUpperCase()) {
+      if (lpToken0Address.toUpperCase() === _usdtAddress.toUpperCase()) {
         tokenUsdtNum = tokenPairObj.reserve0
         token0Num = tokenPairObj.reserve1
       }
@@ -384,7 +285,7 @@ const getCachedPrice = id => {
     if (id.indexOf(',') < 0) {
       const cachedData = JSON.parse(localStorage.getItem(id))
       const cacheTime = 1000 * 60 * 5
-      if (new Date().getTime() - cachedData.lastUpdate <= cacheTime) {
+      if ((new Date().getTime() - cachedData.lastUpdate) <= cacheTime) {
         // console.log("cached----price---", cachedData.lastPrice)
         return cachedData.lastPrice
       }
@@ -584,21 +485,25 @@ export const basicCheck = (web3, currentAccount) => {
 }
 
 export const getConvexInfo = tokenName => {
+
   const apyInfoFromlocalStorage = localStorage.getItem('app.settings.apy')
 
-  let data = converWebsiteInfo
+  let data = []
   try {
     if (apyInfoFromlocalStorage) {
       if (JSON.parse(apyInfoFromlocalStorage).find(i => i.name === 'CRV')) {
         data = JSON.parse(apyInfoFromlocalStorage)
       }
     }
-    const info =
-      data.find(item => item.name === tokenName.toLocaleLowerCase() || item.name === tokenName) ||
-      converWebsiteInfo.find(item => item.name === tokenName)
+    const info = data.find(item => item.name === tokenName.toLocaleLowerCase() || item.name === tokenName)
 
     if (cBN(parseFloat(info.apy.current)).isNaN()) {
-      return converWebsiteInfo.find(item => item.name === tokenName.toLocaleLowerCase())
+      return {
+        "name": tokenName,
+        "depositInfo": { "name": "-", "url": "-" },
+        "apy": { "current": 0, "project": 0 },
+        "token": "-"
+      }
     }
     return info
   } catch (error) {
@@ -614,6 +519,21 @@ export const checkWalletConnect = (currentAccount, connectWallet, currentChainId
   }
   return true
 }
+
+export function saveLock(data) {
+  if (data.lockedAmount * 1 > 0) {
+    return Post('lock/', data)
+  }
+}
+
+export function saveClaimable(data) {
+  return Post('claimable/', data)
+}
+
+export function getLock(address) {
+  return Get('lock', { addr: `addr_dev_${address}` })
+}
+
 
 export default {
   cBN,

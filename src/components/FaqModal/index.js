@@ -39,7 +39,7 @@ const FaqModal = props => {
   return (
     <Modal onCancel={onCancel} width="900px">
       <div className="flex items-center justify-center gap-4 mb-8">
-        <img src={LogoIcon} className="w-52" />
+        <img src={LogoIcon} className="w-52" alt="logo" />
         <div className="text-2xl font-bold">FAQ</div>
       </div>
       {faqList.map(item => (

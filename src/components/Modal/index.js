@@ -9,7 +9,7 @@ export default function Modal(props) {
     <div className={styles.modalWrapper}>
       <div className={styles.modal} style={{ width }}>
         <span className={styles.close} onClick={onCancel}>
-          <img src={CloseIcon} className="w-6" />
+          <img src={CloseIcon} className="w-6 z-50" alt="close" />
         </span>
         <div className={cn(styles.modalContent, overflowVisible && styles.overflowVisible)}>{children}</div>
       </div>
