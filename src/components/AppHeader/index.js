@@ -59,11 +59,11 @@ export default function AppHeader(props) {
                 Vault
               </NavLink>
             </li>
-            <li>
+            {/* <li>
               <NavLink className={styles.link} activeClassName={styles.active} to="/farming">
                 Farming
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink className={styles.link} activeClassName={styles.active} to="/lock">
                 Lock

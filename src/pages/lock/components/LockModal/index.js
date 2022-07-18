@@ -76,7 +76,7 @@ export default function LockModal({ onCancel, refreshAction }) {
     const unlock_time = Math.floor(timestamp / WEEK) * WEEK;
     const willBe = (unlock_time - moment().utc().unix()) / (4 * YEARS) * lockAmount
 
-    return willBe
+    return isNaN(willBe) ? '-' : cBN(willBe).isLessThan(0) ? 0 : willBe
 
   }, [lockAmount, locktime])
 
@@ -137,7 +137,7 @@ export default function LockModal({ onCancel, refreshAction }) {
       </div>
 
       <div className={styles.actions}>
-        <BtnWapper onClick={handleLock} loading={locking}>
+        <BtnWapper onClick={handleLock} disabled={cBN(ctrInfo.balance).isLessThanOrEqualTo(0)} loading={locking}>
           Lock
         </BtnWapper>
       </div>

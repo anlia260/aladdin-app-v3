@@ -80,6 +80,8 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
 
   const setMax = () => setLockAmount(fb4(ctrInfo.balance, false))
 
+  const canLock = cBN(ctrInfo.balance).isGreaterThan(0) && cBN(lockAmount).multipliedBy(10e18).isLessThanOrEqualTo(ctrInfo.balance)
+
   return (
     <Modal onCancel={onCancel}>
       <div className={styles.info}>
@@ -103,7 +105,7 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
       </div>
 
       <div className={styles.actions}>
-        <BtnWapper theme="lightBlue" onClick={handleLock} loading={locking}>
+        <BtnWapper theme="lightBlue" onClick={handleLock} disabled={!canLock} loading={locking}>
           Lock
         </BtnWapper>
       </div>

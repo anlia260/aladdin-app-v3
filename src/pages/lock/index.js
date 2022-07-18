@@ -43,8 +43,8 @@ const LockPage = () => {
       <div className="container">
         <Banner title="Lock CRT" subtitle="lock CTR to earn platform fee in aCRV" />
 
-        <div className="flex gap-6">
-          <div className={cn(styles.actionBoard, ' p-16 flex-1')}>
+        <div className="flex gap-6 flex-col md:flex-row">
+          <div className={cn(styles.actionBoard, 'p-12 lg:p-16 flex-1')}>
             <div className={cn(styles.boardTitle, 'text-lg font-semibold')}>Overview</div>
             <div className={styles.vaultsInfos}>
               {pageData.overview.map((item, index) => (
@@ -57,11 +57,11 @@ const LockPage = () => {
               ))}
             </div>
           </div>
-          <div className={cn(styles.actionBoard, 'p-16 flex-1')}>
+          <div className={cn(styles.actionBoard, 'p-12 lg:p-16 flex-1')}>
             <div className="flex flex-col justify-between h-full">
               <div>
                 <div className={cn(styles.boardTitle, 'text-lg font-semibold')}>Lock CTR</div>
-                {pageData.userData.map(i => <InfoItem title={i.title} value={i.value} />)}
+                {pageData.userData.map(i => <InfoItem key={i.title} title={i.title} value={i.value} />)}
               </div>
               <div className="flex gap-3 justify-end">
                 {cBN(pageData.contractInfo.userVeRewards).isGreaterThan(0) &&

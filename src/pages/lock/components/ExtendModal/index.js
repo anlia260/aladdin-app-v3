@@ -78,13 +78,14 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
     return current && current < moment(userLocked.end * 1000).endOf('day');
   };
 
+  const days = useMemo(() => {
+    return userLocked?.end ? Math.abs(moment().diff(moment(userLocked?.end * 1000), 'days')) : 0
+  }, [userLocked])
+
   const shortDate = useMemo(() => {
-
-    const days = userLocked?.end ? Math.abs(moment().diff(moment(userLocked?.end * 1000), 'days')) : 0
-
     return [{
       lable: '4 years',
-      disabledDate: days > 1460,
+      disabledDate: days > 1457,
       value: 1460
     }, {
       lable: '1 years',
@@ -95,7 +96,7 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
       disabledDate: days > 180,
       value: 180
     }, {
-      lable: '6 months',
+      lable: '3 months',
       disabledDate: days > 90,
       value: 90
     }, {
@@ -107,7 +108,7 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
       disabledDate: days > 7,
       value: 7
     }]
-  }, [userLocked])
+  }, [days])
 
   return (
     <Modal onCancel={onCancel}>
@@ -151,7 +152,7 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
       </div>
 
       <div className={styles.actions}>
-        <Button theme="lightBlue" onClick={handleLock} loading={locking}>
+        <Button theme="lightBlue" onClick={handleLock} disabled={days > 1457} loading={locking}>
           Extend
         </Button>
       </div>

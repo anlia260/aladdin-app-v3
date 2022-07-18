@@ -38,7 +38,7 @@ const useErc20Token = (refreshTrigger, tokenAddr, approveForAddr) => {
     if (checkChain) {
       fetchTokenInfo()
     }
-  }, [web3, getBlockNumber(), checkChain, refreshTrigger])
+  }, [web3, getBlockNumber(), checkChain, currentAccount, refreshTrigger])
 
   return {
     tokenContract,

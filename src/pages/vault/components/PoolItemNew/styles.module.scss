@@ -13,7 +13,7 @@
     text-align: center;
     padding: 24px 32px;
     display: grid;
-    grid-template-columns: 200px 1fr 1fr 1fr 1fr 32px;
+    grid-template-columns: 200px 1fr 1fr 1fr 32px;
     align-items: center;
     font-size: 18px;
     font-weight: 300;
@@ -98,7 +98,7 @@
       }
     }
     .briefLine {
-      grid-template-columns: 200px 1fr 1fr 1fr 1fr 120px;
+      grid-template-columns: 200px 1fr 1fr 1fr 120px;
     }
   }
   @media (max-width: 768px) {
@@ -157,7 +157,7 @@
       }
     }
     .briefLine {
-      grid-template-columns: 110px 1fr 1fr 1fr 1fr 16px;
+      grid-template-columns: 110px 1fr 1fr 1fr 16px;
       // div:nth-child(4) {
       //   display: none;
       // }

@@ -221,7 +221,7 @@ export default function DepositModal(props) {
       />
 
       <div className='-mt-2'>
-        Fee may be lower after IFO. See see <a href="https://docs.aladdin.club/concentrator/ifo-vaults" target="_blank" className='color-white underline'>gitbook</a> for details.
+        Fee may be lower after IFO. See <a href="https://docs.aladdin.club/concentrator/ifo-vaults" target="_blank" className='color-white underline'>gitbook</a> for details.
       </div>
 
       {selectToken.needZap && (

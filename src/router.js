@@ -21,6 +21,11 @@ const routes = [
     exact: true,
   },
   {
+    path: '/dataPanel',
+    Component: lazy(() => import('pages/test')),
+    exact: true,
+  },
+  {
     path: '/auth/404',
     Component: lazy(() => import('pages/auth/404')),
     exact: true,
