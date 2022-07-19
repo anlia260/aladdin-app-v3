@@ -69,7 +69,16 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
   }, [userLocked])
 
 
-  const addTime = days => setLocktime(moment(moment().add(days, 'day')))
+  const addTime = days => {
+    let params = moment(moment().add(days, 'day')).startOf('day')
+    console.log(params.weekday())
+    if (params.weekday() < 4) {
+      params = params.add(4 - params.weekday() + 1, 'day')
+    } else {
+      params = params.add(1, 'week')
+    }
+    setLocktime(params)
+  }
 
 
   const disabledDate = current => {

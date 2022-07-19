@@ -40,6 +40,7 @@ export default function LockModal({ onCancel, refreshAction }) {
   const [locktime, setLocktime] = useState(moment().add(1, 'day'))
   const [current, setCurrent] = useState()
   const [locking, setLocking] = useState(false)
+  const [isMax, setIsMax] = useState(false)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   const veCTR = useVeCTR()
@@ -108,9 +109,11 @@ export default function LockModal({ onCancel, refreshAction }) {
 
   const setMax = () => {
     setLockAmount(fb4(ctrInfo.balance, false))
+    setIsMax(true)
   }
 
-  const canLock = cBN(ctrInfo.balance).isGreaterThan(0) && cBN(lockAmount).isGreaterThan(0) && cBN(lockAmount).shiftedBy(18).isLessThanOrEqualTo(ctrInfo.balance)
+  const amount = isMax ? cBN(ctrInfo.balance) : cBN(lockAmount).shiftedBy(18)
+  const canLock = cBN(ctrInfo.balance).isGreaterThan(0) && amount.isGreaterThan(0) && amount.isLessThanOrEqualTo(ctrInfo.balance)
 
   return (
     <Modal onCancel={onCancel}>
@@ -121,7 +124,10 @@ export default function LockModal({ onCancel, refreshAction }) {
       <div className="mb-8">
         <div className="mb-1">How much do you want to lock?</div>
         <div className="relative">
-          <input type="text" className={styles.input} value={lockAmount} onChange={e => setLockAmount(e.target.value)} />
+          <input type="text" className={styles.input} value={lockAmount} onChange={e => {
+            setLockAmount(e.target.value)
+            setIsMax(e.target.value === fb4(ctrInfo.balance))
+          }} />
           <a className={styles.max} onClick={setMax}>
             MAX
           </a>

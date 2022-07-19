@@ -14,6 +14,7 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
   const { web3, currentAccount, checkChain, getBlockNumber } = useWeb3()
   const [lockAmount, setLockAmount] = useState()
   const [locking, setLocking] = useState(false)
+  const [isMax, setIsMax] = useState(false)
   const { userLocked } = pageData.contractInfo
   const [refreshTrigger, setRefreshTrigger] = useState(0)
 
@@ -77,9 +78,13 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
   }, [userLocked, lockAmount])
 
 
-  const setMax = () => setLockAmount(fb4(ctrInfo.balance, false))
+  const setMax = () => {
+    setIsMax(true)
+    setLockAmount(fb4(ctrInfo.balance, false))
+  }
 
-  const canLock = cBN(ctrInfo.balance).isGreaterThan(0) && cBN(lockAmount).shiftedBy(18).isLessThanOrEqualTo(ctrInfo.balance)
+  const amount = isMax ? cBN(ctrInfo.balance) : cBN(lockAmount).shiftedBy(18)
+  const canLock = cBN(ctrInfo.balance).isGreaterThan(0) && amount.isGreaterThan(0) && amount.isLessThanOrEqualTo(ctrInfo.balance)
 
   return (
     <Modal onCancel={onCancel}>
@@ -90,7 +95,11 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
       <div className="mb-8">
         <div className="mb-1">How much do you want to lock?</div>
         <div className="relative">
-          <input type="text" className={styles.input} value={lockAmount} onChange={e => setLockAmount(e.target.value)} />
+          <input type="text" className={styles.input} value={lockAmount} onChange={e => {
+            setLockAmount(e.target.value)
+            setIsMax(e.target.value === fb4(ctrInfo.balance))
+
+          }} />
           <a className={styles.max} onClick={setMax}>
             MAX
           </a>
