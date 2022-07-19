@@ -81,5 +81,8 @@
     &:hover {
       background: $lightBlue;
     }
+    &.active {
+      background: $lightBlue;
+    }
   }
 }

@@ -12,10 +12,33 @@ import useWeb3 from 'hooks/useWeb3'
 import styles from './styles.module.scss'
 import { basicCheck, cBN, fb4 } from 'utils'
 
+
+const shortDate = [{
+  lable: '4 years',
+  value: 1460
+}, {
+  lable: '1 years',
+  value: 365
+}, {
+  lable: '6 months',
+  value: 180
+}, {
+  lable: '3 months',
+  value: 90
+}, {
+  lable: '1 months',
+  value: 30
+}, {
+  lable: '1 week',
+  value: 7
+}]
+
+
 export default function LockModal({ onCancel, refreshAction }) {
   const { web3, currentAccount, checkChain, getBlockNumber } = useWeb3()
   const [lockAmount, setLockAmount] = useState()
   const [locktime, setLocktime] = useState(moment().add(1, 'day'))
+  const [current, setCurrent] = useState()
   const [locking, setLocking] = useState(false)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
 
@@ -61,7 +84,10 @@ export default function LockModal({ onCancel, refreshAction }) {
     }
   }
 
-  const addTime = days => setLocktime(moment(moment().add(days, 'day')))
+  const addTime = days => {
+    setLocktime(moment(moment().add(days, 'day')))
+    setCurrent(days)
+  }
 
   const vePower = useMemo(() => {
 
@@ -124,12 +150,7 @@ export default function LockModal({ onCancel, refreshAction }) {
           dropdownClassName={styles.datePickerDropdown}
         />
         <div className={styles.months}>
-          <a onClick={() => addTime(1460)}>4 years</a>
-          <a onClick={() => addTime(365)}>1 years</a>
-          <a onClick={() => addTime(180)}>6 months</a>
-          <a onClick={() => addTime(90)}>3 months</a>
-          <a onClick={() => addTime(30)}>1 months</a>
-          <a onClick={() => addTime(7)}>1 week</a>
+          {shortDate.map(i => (<a className={`${i.value === current ? styles.active : ''}`} onClick={() => addTime(i.value)}>{i.lable}</a>))}
         </div>
       </div>
 

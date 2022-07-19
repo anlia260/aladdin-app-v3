@@ -13,6 +13,7 @@ import styles from './styles.module.scss'
 export default function ExtendModal({ onCancel, pageData, refreshAction }) {
   const { web3, currentAccount } = useWeb3()
   const [locktime, setLocktime] = useState(moment())
+  const [current, setCurrent] = useState()
   const [locking, setLocking] = useState(false)
   const { userLocked } = pageData.contractInfo
   const veCTR = useVeCTR()
@@ -63,7 +64,7 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
 
   useEffect(() => {
     if (userLocked?.end) {
-      setLocktime(moment(userLocked?.end * 1000).add(1, 'day'))
+      setLocktime(moment(userLocked?.end * 1000))
     }
   }, [userLocked])
 
@@ -79,7 +80,8 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
   };
 
   const days = useMemo(() => {
-    return userLocked?.end ? Math.abs(moment().diff(moment(userLocked?.end * 1000), 'days')) : 0
+    const params = userLocked?.end ? moment().diff(moment(userLocked?.end * 1000).startOf('day'), 'days', true) : 0
+    return Math.abs(params)
   }, [userLocked])
 
   const shortDate = useMemo(() => {
@@ -109,6 +111,14 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
       value: 7
     }]
   }, [days])
+
+  const handleShortDateClick = (i) => {
+    if (!i.disabledDate) {
+      addTime(i.value)
+      setCurrent(i.value)
+    }
+  }
+
   return (
     <Modal onCancel={onCancel}>
       <div className={styles.info}>
@@ -136,18 +146,17 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
           dropdownClassName={styles.datePickerDropdown}
         />
         <div className={styles.months}>
-          {shortDate.map(i => <a className={i.disabledDate ? styles.disabled : ''} onClick={() => {
-            if (!i.disabledDate) {
-              addTime(i.value)
-            }
-
-          }}>{i.lable}</a>)}
+          {shortDate.map(i =>
+            <a className={`${i.disabledDate ? styles.disabled : ''} ${i.value === current ? styles.active : ''}`} onClick={() => handleShortDateClick(i)}>
+              {i.lable}
+            </a>
+          )}
         </div>
       </div>
 
       <div className="my-8">
         <div>Your starting voting power will be: {fb4(vePower)} veCTR</div>
-        <div>Unlocked Time: {locktime ? locktime.utc().format('lll') : '-'}</div>
+        <div>Unlocked Time: {locktime ? locktime.format('lll') : '-'}</div>
       </div>
 
       <div className={styles.actions}>

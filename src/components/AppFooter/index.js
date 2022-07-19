@@ -33,11 +33,11 @@ const socialLinks = [
     icon: <IconDiscord className={style.socialIcons} />,
     link: 'https://discord.gg/mCTXgANxWy',
   },
-  {
-    key: 'telegramm',
-    icon: <IconTelegram className={style.socialIcons} />,
-    link: 'https://t.me/aladdin_dao',
-  },
+  // {
+  //   key: 'telegramm',
+  //   icon: <IconTelegram className={style.socialIcons} />,
+  //   link: 'https://t.me/aladdin_dao',
+  // },
 ]
 
 export default function AppFooter() {

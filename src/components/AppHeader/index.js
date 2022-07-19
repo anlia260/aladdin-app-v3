@@ -23,23 +23,16 @@ export default function AppHeader(props) {
 
   const Nav = () => {
     return <>
-        <div
-    className={cn(styles.btn, styles.faq, 'mr-3 text-white cursor-pointer')}
-    onClick={() => setFaqModalVisible(true)}
-  >
-    FAQ
-  </div>
-  <div
-    className={cn(styles.btn, styles.faq, 'mr-3 text-white  cursor-pointer')}
-    onClick={() => setIfoFaqModalVisible(true)}
-  >
-    IFO FAQ
-  </div>
-  <Button theme="deepBlue" className="mr-3" style={{ padding: '6px 16px', fontSize: '14px' }}>
-    {fb4(ctrBalance)} CTR
-  </Button>
-  <NetworkCheck />
-    
+        <Button pure={true} theme="deepBlue" className="mr-3" style={{ padding: '6px 16px', fontSize: '14px' }} onClick={() => setFaqModalVisible(true)}>
+          FAQ
+        </Button>
+        <Button pure={true} theme="deepBlue" className="mr-3" style={{ padding: '6px 16px', fontSize: '14px' }} onClick={() => setIfoFaqModalVisible(true)}>
+        IFO FAQ
+        </Button>
+        <Button theme="deepBlue" className="mr-3" style={{ padding: '6px 16px', fontSize: '14px' }}>
+          {fb4(ctrBalance)} CTR
+        </Button>
+        <NetworkCheck />
     </>
 
   }
