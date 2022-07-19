@@ -76,13 +76,15 @@ export default function LockModal({ onCancel, refreshAction }) {
     const unlock_time = Math.floor(timestamp / WEEK) * WEEK;
     const willBe = (unlock_time - moment().utc().unix()) / (4 * YEARS) * lockAmount
 
-    return isNaN(willBe) ? '-' : cBN(willBe).isLessThan(0) ? 0 : willBe
+    return isNaN(willBe) ? '-' : cBN(willBe).isLessThan(0) ? 0 : cBN(willBe).toFixed(12)
 
   }, [lockAmount, locktime])
 
   const setMax = () => {
     setLockAmount(fb4(ctrInfo.balance, false))
   }
+
+  const canLock = cBN(ctrInfo.balance).isGreaterThan(0) && cBN(lockAmount).isGreaterThan(0) && cBN(lockAmount).shiftedBy(18).isLessThanOrEqualTo(ctrInfo.balance)
 
   return (
     <Modal onCancel={onCancel}>
@@ -137,7 +139,7 @@ export default function LockModal({ onCancel, refreshAction }) {
       </div>
 
       <div className={styles.actions}>
-        <BtnWapper onClick={handleLock} disabled={cBN(ctrInfo.balance).isLessThanOrEqualTo(0)} loading={locking}>
+        <BtnWapper onClick={handleLock} disabled={!canLock} loading={locking}>
           Lock
         </BtnWapper>
       </div>

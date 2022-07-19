@@ -109,7 +109,6 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
       value: 7
     }]
   }, [days])
-
   return (
     <Modal onCancel={onCancel}>
       <div className={styles.info}>
@@ -148,7 +147,7 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
 
       <div className="my-8">
         <div>Your starting voting power will be: {fb4(vePower)} veCTR</div>
-        <div>Unlocked Time: {locktime ? locktime.format('lll') : '-'}</div>
+        <div>Unlocked Time: {locktime ? locktime.utc().format('lll') : '-'}</div>
       </div>
 
       <div className={styles.actions}>

@@ -47,6 +47,7 @@ const useInfo = (refreshTrigger) => {
 
   useEffect(() => {
     const { veTotalSupply, veLockedCTR, userLocked, userVeShare, userVeRewards } = info
+    console.log(info)
     const avgTime = () => {
       const years = cBN(veLockedCTR).isZero() ? 0 : cBN(4).multipliedBy(veTotalSupply).div(veLockedCTR)
       if (!years) {

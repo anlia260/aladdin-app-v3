@@ -71,7 +71,6 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
 
     const YEARS = 86400 * 365;
     const willBe = (locktime - moment().utc().unix()) / (4 * YEARS) * lockAmount
-    console.log(willBe)
 
     return willBe
 
@@ -80,7 +79,7 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
 
   const setMax = () => setLockAmount(fb4(ctrInfo.balance, false))
 
-  const canLock = cBN(ctrInfo.balance).isGreaterThan(0) && cBN(lockAmount).multipliedBy(10e18).isLessThanOrEqualTo(ctrInfo.balance)
+  const canLock = cBN(ctrInfo.balance).isGreaterThan(0) && cBN(lockAmount).shiftedBy(18).isLessThanOrEqualTo(ctrInfo.balance)
 
   return (
     <Modal onCancel={onCancel}>
