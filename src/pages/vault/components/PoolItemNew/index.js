@@ -94,7 +94,7 @@ export default function PoolItemNew(props) {
             <a target="_blank" href={convexInfo?.depositInfo.url} className="font-medium underline">
               {item.nameShow}
             </a>{' '}
-            (without staking in the Curve gague), then stake{' '}
+            (without staking in the Curve gauge), then stake{' '}
             <span className="font-medium text-white">{item.stakeTokenSymbol}</span> here.<br />
             During the IFO, vault rewards $aCRV will be replaced by <span className="text-white font-medium">$CTR</span> 1:1
           </div>
