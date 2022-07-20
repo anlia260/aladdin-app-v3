@@ -11,7 +11,7 @@ import Tip from 'components/Tip'
 import useWeb3 from 'hooks/useWeb3'
 import styles from './styles.module.scss'
 import { basicCheck, cBN, fb4 } from 'utils'
-import { WEEK, YEARS, calc4, tipText, shortDate } from "../../util"
+import { WEEK, YEARS, calc4, tipText, shortDate, lockTimeTipText } from "../../util"
 
 
 export default function LockModal({ onCancel, refreshAction }) {
@@ -146,9 +146,8 @@ export default function LockModal({ onCancel, refreshAction }) {
       <div className="my-8">
         <div>Your starting voting power will be: {vePower} veCTR</div>
         <div className='mb-1 flex items-center gap-1'>
-          Unlocked Time
-          <Tip title={`Locked Time is every Thursday UTC 00:00`} />
-          :{calc4(locktime).format('YYYY-MM-DD HH:mm:ss UTCZ')}
+          Unlocked Time<Tip title={lockTimeTipText} />
+          :{locktime ? calc4(locktime).format('YYYY-MM-DD HH:mm:ss UTCZ') : '-'}
         </div>
       </div>
 

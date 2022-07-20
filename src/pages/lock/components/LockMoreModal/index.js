@@ -2,14 +2,15 @@ import React, { useEffect, useMemo, useState } from 'react'
 import Modal from 'components/Modal'
 import moment from 'moment'
 import config from 'config'
+import Tip from 'components/Tip'
 import useApprove from 'hooks/useApprove'
 import useErc20Token from 'hooks/useErc20Token'
 import useVeCTR from 'config/contract/veCTR'
 import NoPayableAction, { noPayableErrorAction } from 'utils/noPayableAction'
 import useWeb3 from 'hooks/useWeb3'
 import styles from './styles.module.scss'
-import { basicCheck, cBN, fb4 } from 'utils'
-import { YEARS } from "../../util"
+import { basicCheck, calc4, cBN, fb4 } from 'utils'
+import { YEARS, lockTimeTipText } from "../../util"
 
 export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
   const { web3, currentAccount } = useWeb3()
@@ -107,7 +108,10 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
 
       <div className="my-8">
         <div>Your starting voting power will be: {vePower} veCTR</div>
-        <div>Unlocked Time: {(userLocked.end ? moment(userLocked.end * 1000) : moment()).format('YYYY-MM-DD HH:mm:ss UTCZ')}</div>
+        <div className='mb-1 flex items-center gap-1'>
+          Unlocked Time<Tip title={lockTimeTipText} />
+          :{userLocked.end ? moment(userLocked.end * 1000).format('YYYY-MM-DD HH:mm:ss UTCZ') : '-'}
+        </div>
       </div>
 
       <div className={styles.actions}>

@@ -47,3 +47,6 @@ export const tipText = `Lock CTR will receive veCTR. The longer the lock time, t
 1 CTR locked for 3 years = 0.75 veCTR<br/>
 1 CTR locked for 2 years = 0.5 veCTR<br/>
 1 CTR locked for 1 years = 0.25 veCTR`
+
+
+export const lockTimeTipText = `Locks are grouped into weekly  "epochs" which start on Thursday at 00:00 UTC`

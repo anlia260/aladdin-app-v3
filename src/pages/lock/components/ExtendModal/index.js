@@ -6,7 +6,7 @@ import Tip from 'components/Tip'
 import useWeb3 from 'hooks/useWeb3'
 import useVeCTR from 'config/contract/veCTR'
 import NoPayableAction, { noPayableErrorAction } from 'utils/noPayableAction'
-import { WEEK, YEARS, calc4 } from "../../util"
+import { WEEK, YEARS, calc4, tipText, lockTimeTipText } from "../../util"
 import { basicCheck, cBN, fb4 } from 'utils'
 import Button from 'components/Button'
 import styles from './styles.module.scss'
@@ -128,15 +128,8 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
 
       <div>
         <div className="mb-1 flex items-center gap-1">
-          When do you want to lock to?{' '}
-          <Tip
-            title={`Lock CTR will receive veCTR. The longer the lock time, the more veCTR received.<br/>
-              1 CTR locked for 4 years = 1 veCTR<br/>
-              1 CTR locked for 3 years = 0.75 veCTR<br/>
-              1 CTR locked for 2 years = 0.5 veCTR<br/>
-              1 CTR locked for 1 years = 0.25 veCTR`}
-            style={{ width: '300px' }}
-          />
+          When do you want to lock to?
+          <Tip title={tipText} style={{ width: '300px' }} />
         </div>
         <DatePicker
           value={locktime}
@@ -158,7 +151,10 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
 
       <div className="my-8">
         <div>Your starting voting power will be: {fb4(vePower)} veCTR</div>
-        <div>Unlocked Time: {locktime ? calc4(locktime).format('YYYY-MM-DD HH:mm:ss UTCZ') : '-'}</div>
+        <div className='mb-1 flex items-center gap-1'>
+          Unlocked Time<Tip title={lockTimeTipText} />
+          :{locktime ? calc4(locktime).format('YYYY-MM-DD HH:mm:ss UTCZ') : '-'}
+        </div>
       </div>
 
       <div className={styles.actions}>
