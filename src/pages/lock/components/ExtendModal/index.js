@@ -68,7 +68,7 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
   }, [userLocked])
 
   const addTime = days => {
-    const params = moment(moment.unix(userLocked?.end).add(days, 'day'))
+    const params = moment(moment().add(days, 'day'))
     setLocktime(params)
   }
 
