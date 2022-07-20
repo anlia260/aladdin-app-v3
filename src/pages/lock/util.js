@@ -6,7 +6,7 @@ export const YEARS = 86400 * 365;
 // align Thursday
 export const calc4 = (m) => {
   let params = m.clone();
-  console.log('addtime:current', params.format('lll'), params.weekday())
+  // console.log('addtime:current', params.format('lll'), params.weekday())
   // if (params.weekday() < 4) {
   //   params = params.add(4 - params.weekday(), 'day')
   // } else if (params.weekday() > 4) {
@@ -15,7 +15,7 @@ export const calc4 = (m) => {
   // console.log('addtime', params.format('lll'), params.weekday(), params.unix(), params.unix() % (86400 * 7))
 
   const unlock_time = Math.floor(params.unix() / WEEK) * WEEK;
-  console.log('addtime', moment(unlock_time * 1000).format('lll'), moment(unlock_time * 1000).weekday(), moment(unlock_time * 1000).unix(), moment(unlock_time * 1000).unix() % (86400 * 7))
+  // console.log('addtime', moment(unlock_time * 1000).format('lll'), moment(unlock_time * 1000).weekday(), moment(unlock_time * 1000).unix(), moment(unlock_time * 1000).unix() % (86400 * 7))
   return moment(unlock_time * 1000)
 }
 

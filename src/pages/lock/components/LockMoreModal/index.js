@@ -9,9 +9,10 @@ import NoPayableAction, { noPayableErrorAction } from 'utils/noPayableAction'
 import useWeb3 from 'hooks/useWeb3'
 import styles from './styles.module.scss'
 import { basicCheck, cBN, fb4 } from 'utils'
+import { YEARS } from "../../util"
 
 export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
-  const { web3, currentAccount, checkChain, getBlockNumber } = useWeb3()
+  const { web3, currentAccount } = useWeb3()
   const [lockAmount, setLockAmount] = useState()
   const [locking, setLocking] = useState(false)
   const [isMax, setIsMax] = useState(false)
@@ -64,13 +65,11 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
 
 
   const vePower = useMemo(() => {
-
     const locktime = userLocked?.end ?? 0
     if (!lockAmount || cBN(lockAmount).isLessThan(0)) {
       return 0
     }
 
-    const YEARS = 86400 * 365;
     const willBe = (locktime - moment().utc().unix()) / (4 * YEARS) * lockAmount
 
     return willBe
@@ -98,7 +97,6 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
           <input type="text" className={styles.input} value={lockAmount} onChange={e => {
             setLockAmount(e.target.value)
             setIsMax(e.target.value === fb4(ctrInfo.balance))
-
           }} />
           <a className={styles.max} onClick={setMax}>
             MAX

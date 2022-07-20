@@ -8,20 +8,20 @@ const useInfo = (refreshTrigger) => {
 
   const [pageData, setPageData] = useState({
     overview: [
-      {
-        title: 'APY',
-        value: '20.3%',
-      },
+      // {
+      //   title: 'APY',
+      //   value: '20.3%',
+      // },
       {
         title: 'Total veCTR',
         value: '300,000',
       },
       {
-        title: 'Total Locked CRT',
+        title: 'AVG Time',
         value: '300,000',
       },
       {
-        title: 'AVG Time',
+        title: 'Total Locked CRT',
         value: '300,000',
       },
     ],
@@ -74,21 +74,21 @@ const useInfo = (refreshTrigger) => {
 
     setPageData(prev => ({
       ...prev, overview: [
-        {
-          title: 'APY',
-          value: '0',
-        },
+        // {
+        //   title: 'APY',
+        //   value: '0',
+        // },
         {
           title: 'Total veCTR',
           value: fb4(veTotalSupply),
         },
         {
-          title: 'Total Locked CRT',
-          value: fb4(veLockedCTR),
-        },
-        {
           title: 'AVG Time',
           value: avgTime(),
+        },
+        {
+          title: 'Total Locked CRT',
+          value: fb4(veLockedCTR),
         },
       ],
       status,
