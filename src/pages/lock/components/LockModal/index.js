@@ -18,7 +18,6 @@ export default function LockModal({ onCancel, refreshAction }) {
   const { web3, currentAccount, getBlockNumber } = useWeb3()
   const [lockAmount, setLockAmount] = useState()
   const [locktime, setLocktime] = useState(moment().add(1, 'day'))
-  const [current, setCurrent] = useState()
   const [locking, setLocking] = useState(false)
   const [isMax, setIsMax] = useState(false)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
@@ -49,7 +48,7 @@ export default function LockModal({ onCancel, refreshAction }) {
   const handleLock = async () => {
     if (!basicCheck(web3, currentAccount)) return
     const lockAmountInWei = cBN(lockAmount || 0).shiftedBy(18).toFixed(0, 1)
-
+    setLocking(true)
     try {
       const apiCall = veCTR.methods.create_lock(lockAmountInWei.toString(), locktime.unix())
       const estimatedGas = await apiCall.estimateGas({ from: currentAccount })
@@ -59,15 +58,16 @@ export default function LockModal({ onCancel, refreshAction }) {
         action: 'lock',
       })
       onCancel()
+      setLocking(false)
       setRefreshTrigger(prev => prev + 1)
     } catch (error) {
+      setLocking(false)
       noPayableErrorAction(`error_ctr_lock`, error)
     }
   }
 
   const addTime = days => {
     setLocktime(moment(moment().add(days, 'day')))
-    setCurrent(days)
   }
 
   const vePower = useMemo(() => {
@@ -141,14 +141,15 @@ export default function LockModal({ onCancel, refreshAction }) {
           renderExtraFooter={ExtraFooter}
           dropdownClassName={styles.datePickerDropdown}
         />
-        {/* <div className={styles.months}>
-          {shortDate.map(i => (<a key={i.value} className={`${i.value === current ? styles.active : ''}`} onClick={() => addTime(i.value)}>{i.lable}</a>))}
-        </div> */}
       </div>
 
       <div className="my-8">
         <div>Your starting voting power will be: {vePower} veCTR</div>
-        <div>Unlocked Time: {calc4(locktime).format('YYYY-MM-DD HH:mm:ss UTCZ')}</div>
+        <div className='mb-1 flex items-center gap-1'>
+          Unlocked Time
+          <Tip title={`Locked Time is every Thursday UTC 00:00`} />
+          :{calc4(locktime).format('YYYY-MM-DD HH:mm:ss UTCZ')}
+        </div>
       </div>
 
       <div className={styles.actions}>
