@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react'
 import { Route, Redirect, Switch } from 'react-router-dom'
+import TipContent from 'components/TipContent'
 import { ConnectedRouter } from 'connected-react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
@@ -77,6 +78,7 @@ const Router = ({ history, routerAnimation }) => {
         }}
       />
       {/* </Layout> */}
+      <TipContent />
     </ConnectedRouter>
   )
 }

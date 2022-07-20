@@ -1,42 +1,89 @@
 @import "../../mixins.scss";
 
-
-.tip{
+.tip {
     position: relative;
-    // display: inline-block;
-    vertical-align:middle;
-    display: inline-flex;
-
-    &:hover{
-        .title{
+    z-index: 10000;
+    display: inline-block;
+    // vertical-align: middle;
+    margin-left: 2px;
+    &:hover {
+        .titleWrapper {
             display: block;
         }
     }
 }
 
-.icon{
+.icon {
     color: #fff;
-    width: 18px;
-    height: 18px;
+    // width: 18px;
+    // height: 18px;
+    // cursor: pointer;
+    vertical-align: middle;
+    font-size: 18px;
 }
 
-.title{
-    position: absolute;
-    z-index: 400;
-    top: 24px;
-    left: 0;
-    display: none;
-    width: 360px;
-    padding: 16px;
-    border-radius: 16px;
-    background: #fff;
-    color: $blue;
-    &.top{
-        bottom: 24px;
-        top: unset;
-    }
-    // default
-    &.bottom{
+// .titleWrapper{
+//     display: none;
+//     position: absolute;
+//     z-index: 400;
+//     top: 18px;
+//     left: 0;
+//     padding-top: 8px;
+//     &.top {
+//         bottom: 18px;
+//         top: unset;
+//     }
+//     &.left {
+//         right: 0;
+//         left: unset;
+//     }
+//     &.right {
+//         left: 0;
+//         right: unset;
+//     }
+//     &.center {
+//         left: -180px;
+//         right: 0;
+//         margin: auto;
+//     }
+// }
 
-    }
-}
+// .title {
+  
+//     width: 360px;
+//     padding: 16px;
+//     border-radius: 16px;
+//     background: #fff;
+//     color: $blue;
+//     max-width: 100%;
+  
+//     // default
+//     &.bottom {
+//     }
+
+//     @media (max-width: 1440px) {
+//         font-size: 15px;
+//     }
+
+//     @media (max-width: 1200px) {
+//         font-size: 14px;
+//         width: 200px;
+//         &.center {
+//             left: -100px;
+//         }
+//     }
+//     @media (max-width: 992px) {
+//         font-size: 12px;
+//         width: 160px;
+//         &.center {
+//             left: -80px;
+//         }
+//     }
+// }
+
+// div[class="default"] {
+//     .title {
+//         color: $white;
+//         background: $blue;
+//     }
+// }

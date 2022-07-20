@@ -14,6 +14,20 @@ export function* CHANGE_SETTING({ payload: { setting, value } }) {
   })
 }
 
+export function* SET_TIP({ payload }) {
+  yield reduxStore.dispatch({
+    type: 'settings/CHANGE_SETTING',
+    payload: {
+      setting: 'tip',
+      value: {
+        title: payload.title,
+        x: payload.x + 1,
+        y: payload.y + 1,
+      },
+    },
+  })
+}
+
 export function* SET_PRIMARY_COLOR({ payload: { color } }) {
   const addStyles = () => {
     const styleElement = document.querySelector('#primaryColor')
@@ -165,6 +179,8 @@ export default function* rootSaga() {
     takeEvery(actions.CHANGE_SETTING, CHANGE_SETTING),
     takeEvery(actions.SET_PRIMARY_COLOR, SET_PRIMARY_COLOR),
     takeEvery(actions.SET_THEME, SET_THEME),
+    takeEvery(actions.SET_TIP, SET_TIP),
+    
     SETUP(), // run once on app load to init listeners
   ])
 }

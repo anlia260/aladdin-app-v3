@@ -72,8 +72,7 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
     }
 
     const willBe = (locktime - moment().utc().unix()) / (4 * YEARS) * lockAmount
-
-    return willBe
+    return isNaN(willBe) ? '-' : cBN(willBe).isLessThan(0) ? 0 : cBN(willBe).toFixed(12)
 
   }, [userLocked, lockAmount])
 
