@@ -90,6 +90,10 @@ export default function LockModal({ onCancel, refreshAction }) {
     setIsMax(true)
   }
 
+  const disabledDate = current => {
+    return current && current.isSameOrBefore(moment())
+  };
+
   const amount = isMax ? cBN(ctrInfo.balance) : cBN(lockAmount).shiftedBy(18)
   const canLock = cBN(ctrInfo.balance).isGreaterThan(0) && amount.isGreaterThan(0) && amount.isLessThanOrEqualTo(ctrInfo.balance)
 
@@ -134,6 +138,7 @@ export default function LockModal({ onCancel, refreshAction }) {
         <DatePicker
           value={locktime}
           onChange={setLocktime}
+          disabledDate={disabledDate}
           className={styles.datePicker}
           getPopupContainer={() => document.getElementById('trigger')}
           showTime={false}
