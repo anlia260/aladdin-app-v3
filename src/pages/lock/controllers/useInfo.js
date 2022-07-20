@@ -47,7 +47,7 @@ const useInfo = (refreshTrigger) => {
 
   useEffect(() => {
     const { veTotalSupply, veLockedCTR, userLocked, userVeShare, userVeRewards } = info
-    console.log(info)
+
     const avgTime = () => {
       const years = cBN(veLockedCTR).isZero() ? 0 : cBN(4).multipliedBy(veTotalSupply).div(veLockedCTR)
       if (!years) {
@@ -63,11 +63,15 @@ const useInfo = (refreshTrigger) => {
       return `${years.multipliedBy(365).toFixed(2)} days`
     }
     const { amount, end } = userLocked
-    let status = 'no-lock'
-    if (end != 0 && end != undefined) {
-      status = 'ing'
-      if (moment(end * 1000).isBefore(moment())) {
-        status = 'expired'
+    let status = ''
+    if (veLockedCTR) {
+      status = 'no-lock'
+
+      if (end != 0 && end != undefined) {
+        status = 'ing'
+        if (moment(end * 1000).isBefore(moment())) {
+          status = 'expired'
+        }
       }
     }
 
