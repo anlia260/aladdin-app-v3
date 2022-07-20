@@ -36,6 +36,8 @@ export default function LockModal({ onCancel, refreshAction }) {
     approveAddress: config.contracts.veCtr,
   })
 
+  const amount = ctrInfo.balance ? isMax ? cBN(ctrInfo.balance) : cBN(lockAmount).shiftedBy(18) : cBN(0)
+
   useEffect(() => {
     setRefreshTrigger(prev => prev + 1)
   }, [approveTrigger])
@@ -47,7 +49,7 @@ export default function LockModal({ onCancel, refreshAction }) {
 
   const handleLock = async () => {
     if (!basicCheck(web3, currentAccount)) return
-    const lockAmountInWei = cBN(lockAmount || 0).shiftedBy(18).toFixed(0, 1)
+    const lockAmountInWei = amount.toFixed(0, 1)
     setLocking(true)
     try {
       const apiCall = veCTR.methods.create_lock(lockAmountInWei.toString(), locktime.unix())
@@ -94,7 +96,7 @@ export default function LockModal({ onCancel, refreshAction }) {
     return current && current.isSameOrBefore(moment())
   };
 
-  const amount = isMax ? cBN(ctrInfo.balance) : cBN(lockAmount).shiftedBy(18)
+
   const canLock = cBN(ctrInfo.balance).isGreaterThan(0) && amount.isGreaterThan(0) && amount.isLessThanOrEqualTo(ctrInfo.balance)
 
   const ExtraFooter = () => {

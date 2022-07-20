@@ -34,6 +34,7 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
     approveAddress: config.contracts.veCtr,
   })
 
+  const amount = ctrInfo.balance ? isMax ? cBN(ctrInfo.balance) : cBN(lockAmount).shiftedBy(18) : cBN(0)
 
   useEffect(() => {
     setRefreshTrigger(prev => prev + 1)
@@ -45,7 +46,8 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
 
   const handleLock = async () => {
     if (!basicCheck(web3, currentAccount)) return
-    const lockAmountInWei = cBN(lockAmount || 0).shiftedBy(18).toFixed(0, 1)
+    const lockAmountInWei = amount.toFixed(0, 1)
+
     setLocking(true)
     try {
       const apiCall = veCTR.methods.increase_amount(lockAmountInWei.toString())
@@ -72,7 +74,7 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
     }
 
     const willBe = (locktime - moment().utc().unix()) / (4 * YEARS) * lockAmount
-    return isNaN(willBe) ? '-' : cBN(willBe).isLessThan(0) ? 0 : cBN(willBe).toFixed(12)
+    return isNaN(willBe) ? '-' : cBN(willBe).isLessThan(0) ? 0 : cBN(willBe).isZero() ? 0 : cBN(willBe).toFixed(12)
 
   }, [userLocked, lockAmount])
 
@@ -82,7 +84,7 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
     setLockAmount(fb4(ctrInfo.balance, false))
   }
 
-  const amount = isMax ? cBN(ctrInfo.balance) : cBN(lockAmount).shiftedBy(18)
+
   const canLock = cBN(ctrInfo.balance).isGreaterThan(0) && amount.isGreaterThan(0) && amount.isLessThanOrEqualTo(ctrInfo.balance)
 
   return (
