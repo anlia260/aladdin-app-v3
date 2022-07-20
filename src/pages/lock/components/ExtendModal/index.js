@@ -164,6 +164,7 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
           disabledDate={disabledDate}
           className={styles.datePicker}
           showTime={false}
+          showToday={false}
           dropdownClassName={styles.datePickerDropdown}
         />
         <div className={styles.months}>
