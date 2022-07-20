@@ -35,7 +35,7 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
   })
 
   const amount = ctrInfo.balance ? isMax ? cBN(ctrInfo.balance) : cBN(lockAmount).shiftedBy(18) : cBN(0)
-
+  console.log("ctrInfo", ctrInfo)
   useEffect(() => {
     setRefreshTrigger(prev => prev + 1)
   }, [approveTrigger])
