@@ -11,7 +11,7 @@ import Tip from 'components/Tip'
 import useWeb3 from 'hooks/useWeb3'
 import styles from './styles.module.scss'
 import { basicCheck, cBN, fb4 } from 'utils'
-import { WEEK, YEARS, calc4, shortDate } from "../../util"
+import { WEEK, YEARS, calc4, tipText, shortDate } from "../../util"
 
 
 export default function LockModal({ onCancel, refreshAction }) {
@@ -93,6 +93,19 @@ export default function LockModal({ onCancel, refreshAction }) {
   const amount = isMax ? cBN(ctrInfo.balance) : cBN(lockAmount).shiftedBy(18)
   const canLock = cBN(ctrInfo.balance).isGreaterThan(0) && amount.isGreaterThan(0) && amount.isLessThanOrEqualTo(ctrInfo.balance)
 
+  const ExtraFooter = () => {
+    return <div className="flex justify-between flex-wrap">
+      {shortDate.map(i => (
+        <div
+          key={i.value}
+          onClick={() => addTime(i.value)}
+          className="text-center w-2/6 underline text-blue-900 cursor-pointer">
+          {i.lable}
+        </div>
+      ))}
+    </div>
+  }
+
   return (
     <Modal onCancel={onCancel}>
       <div className={styles.info}>
@@ -114,29 +127,23 @@ export default function LockModal({ onCancel, refreshAction }) {
       </div>
 
       <div>
-        <div className="mb-1 flex items-center gap-1">
+        <div className="mb-1 flex items-center gap-1" id="trigger">
           When do you want to lock to?
-          <Tip
-            title={`Lock CTR will receive veCTR. The longer the lock time, the more veCTR received.<br/>
-                    1 CTR locked for 4 years = 1 veCTR<br/>
-                    1 CTR locked for 3 years = 0.75 veCTR<br/>
-                    1 CTR locked for 2 years = 0.5 veCTR<br/>
-                    1 CTR locked for 1 years = 0.25 veCTR`
-            }
-            style={{ width: '300px' }}
-          />
+          <Tip title={tipText} style={{ width: '300px' }} />
         </div>
         <DatePicker
           value={locktime}
           onChange={setLocktime}
           className={styles.datePicker}
+          getPopupContainer={() => document.getElementById('trigger')}
           showTime={false}
           showToday={false}
+          renderExtraFooter={ExtraFooter}
           dropdownClassName={styles.datePickerDropdown}
         />
-        <div className={styles.months}>
+        {/* <div className={styles.months}>
           {shortDate.map(i => (<a key={i.value} className={`${i.value === current ? styles.active : ''}`} onClick={() => addTime(i.value)}>{i.lable}</a>))}
-        </div>
+        </div> */}
       </div>
 
       <div className="my-8">

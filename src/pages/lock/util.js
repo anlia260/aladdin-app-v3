@@ -40,3 +40,10 @@ export const shortDate = [{
   lable: '1 week',
   value: 7
 }]
+
+
+export const tipText = `Lock CTR will receive veCTR. The longer the lock time, the more veCTR received.<br/>
+1 CTR locked for 4 years = 1 veCTR<br/>
+1 CTR locked for 3 years = 0.75 veCTR<br/>
+1 CTR locked for 2 years = 0.5 veCTR<br/>
+1 CTR locked for 1 years = 0.25 veCTR`
