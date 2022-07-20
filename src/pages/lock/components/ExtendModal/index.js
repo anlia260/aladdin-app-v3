@@ -64,7 +64,8 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
 
   useEffect(() => {
     if (userLocked?.end) {
-      setLocktime(moment(userLocked?.end * 1000).add(1, 'week').startOf('day'))
+      const date = moment(userLocked?.end * 1000).add(1, 'week')
+      setLocktime(moment(userLocked?.end * 1000).add(1, 'week'))
     }
   }, [userLocked])
 
@@ -95,7 +96,8 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
     if (!userLocked?.end) {
       return false
     }
-    return current && current < moment(userLocked.end * 1000).add(1, 'week').startOf('day');
+    const calcDate = calc4(current).startOf('day')
+    return current && !calcDate.isAfter(moment(userLocked.end * 1000))
   };
 
   const days = useMemo(() => {
@@ -138,7 +140,6 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
     }
   }
 
-
   return (
     <Modal onCancel={onCancel}>
       <div className={styles.info}>
@@ -167,7 +168,7 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
         />
         <div className={styles.months}>
           {shortDate.map(i =>
-            <a className={`${i.disabledDate ? styles.disabled : ''} ${i.value === current ? styles.active : ''}`} onClick={() => handleShortDateClick(i)}>
+            <a key={i.value} className={`${i.disabledDate ? styles.disabled : ''} ${i.value === current ? styles.active : ''}`} onClick={() => handleShortDateClick(i)}>
               {i.lable}
             </a>
           )}
