@@ -109,7 +109,7 @@ export default function LockMoreModal({ onCancel, pageData, refreshAction }) {
 
       <div className="my-8">
         <div>Your starting voting power will be: {vePower} veCTR</div>
-        <div>Unlocked Time: {(userLocked.end ? moment(userLocked.end * 1000) : moment()).format('lll')}</div>
+        <div>Unlocked Time: {(userLocked.end ? moment(userLocked.end * 1000) : moment()).format('YYYY-MM-DD HH:mm:ss UTCZ')}</div>
       </div>
 
       <div className={styles.actions}>

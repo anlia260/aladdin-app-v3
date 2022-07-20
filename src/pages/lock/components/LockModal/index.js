@@ -11,31 +11,11 @@ import Tip from 'components/Tip'
 import useWeb3 from 'hooks/useWeb3'
 import styles from './styles.module.scss'
 import { basicCheck, cBN, fb4 } from 'utils'
-
-
-const shortDate = [{
-  lable: '4 years',
-  value: 1460
-}, {
-  lable: '1 years',
-  value: 365
-}, {
-  lable: '6 months',
-  value: 180
-}, {
-  lable: '3 months',
-  value: 90
-}, {
-  lable: '1 months',
-  value: 30
-}, {
-  lable: '1 week',
-  value: 7
-}]
+import { WEEK, YEARS, calc4, shortDate } from "../../util"
 
 
 export default function LockModal({ onCancel, refreshAction }) {
-  const { web3, currentAccount, checkChain, getBlockNumber } = useWeb3()
+  const { web3, currentAccount, getBlockNumber } = useWeb3()
   const [lockAmount, setLockAmount] = useState()
   const [locktime, setLocktime] = useState(moment().add(1, 'day'))
   const [current, setCurrent] = useState()
@@ -97,8 +77,6 @@ export default function LockModal({ onCancel, refreshAction }) {
     }
 
     const timestamp = locktime.utc().unix()
-    const WEEK = 86400 * 7;
-    const YEARS = 86400 * 365;
 
     const unlock_time = Math.floor(timestamp / WEEK) * WEEK;
     const willBe = (unlock_time - moment().utc().unix()) / (4 * YEARS) * lockAmount
@@ -152,17 +130,18 @@ export default function LockModal({ onCancel, refreshAction }) {
           value={locktime}
           onChange={setLocktime}
           className={styles.datePicker}
-          showTime={true}
+          showTime={false}
+          showToday={false}
           dropdownClassName={styles.datePickerDropdown}
         />
         <div className={styles.months}>
-          {shortDate.map(i => (<a className={`${i.value === current ? styles.active : ''}`} onClick={() => addTime(i.value)}>{i.lable}</a>))}
+          {shortDate.map(i => (<a key={i.value} className={`${i.value === current ? styles.active : ''}`} onClick={() => addTime(i.value)}>{i.lable}</a>))}
         </div>
       </div>
 
       <div className="my-8">
         <div>Your starting voting power will be: {vePower} veCTR</div>
-        <div>Unlocked Time: {locktime.format('lll')}</div>
+        <div>Unlocked Time: {calc4(locktime).format('YYYY-MM-DD HH:mm:ss UTCZ')}</div>
       </div>
 
       <div className={styles.actions}>

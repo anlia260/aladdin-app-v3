@@ -6,12 +6,11 @@ import Tip from 'components/Tip'
 import useWeb3 from 'hooks/useWeb3'
 import useVeCTR from 'config/contract/veCTR'
 import NoPayableAction, { noPayableErrorAction } from 'utils/noPayableAction'
+import { WEEK, YEARS, calc4 } from "../../util"
 import { basicCheck, cBN, fb4 } from 'utils'
 import Button from 'components/Button'
 import styles from './styles.module.scss'
 
-const WEEK = 86400 * 7;
-const YEARS = 86400 * 365;
 
 export default function ExtendModal({ onCancel, pageData, refreshAction }) {
   const { web3, currentAccount } = useWeb3()
@@ -64,33 +63,14 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
 
   useEffect(() => {
     if (userLocked?.end) {
-      const date = moment(userLocked?.end * 1000).add(1, 'week')
       setLocktime(moment(userLocked?.end * 1000).add(1, 'week'))
     }
   }, [userLocked])
-
-  // align Thursday
-  const calc4 = (m) => {
-    let params = m.clone();
-    console.log('addtime:current', params.format('lll'), params.weekday())
-    // if (params.weekday() < 4) {
-    //   params = params.add(4 - params.weekday(), 'day')
-    // } else if (params.weekday() > 4) {
-    //   params = params.add(7 - params.weekday() + 4, 'day')
-    // }
-    // console.log('addtime', params.format('lll'), params.weekday(), params.unix(), params.unix() % (86400 * 7))
-
-    const unlock_time = Math.floor(params.unix() / WEEK) * WEEK;
-    console.log('addtime', moment(unlock_time * 1000).format('lll'), moment(unlock_time * 1000).weekday(), moment(unlock_time * 1000).unix(), moment(unlock_time * 1000).unix() % (86400 * 7))
-    return moment(unlock_time * 1000)
-  }
-
 
   const addTime = days => {
     const params = moment(moment.unix(userLocked?.end).add(days, 'day'))
     setLocktime(params)
   }
-
 
   const disabledDate = current => {
     if (!userLocked?.end) {
