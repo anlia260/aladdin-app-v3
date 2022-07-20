@@ -102,7 +102,7 @@ const useInfo = (refreshTrigger) => {
           value: `${fb4(userVeShare)} veCTR`,
         }, {
           title: 'Locked to',
-          value: end != 0 && end != undefined ? moment(end * 1000).subtract(1, 'week').format('lll') : '-',
+          value: end != 0 && end != undefined ? moment(end * 1000).format('lll') : '-',
         }, {
           title: 'Rewards',
           value: `${fb4(userVeRewards)} aCRV`,

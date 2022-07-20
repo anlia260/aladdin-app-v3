@@ -26,7 +26,7 @@ const useData = (refreshTrigger) => {
     const [veTotalSupply, veLockedCTR, userVeShare] = await multiCall(web3, currentAccount, ...abiCalls)
 
     seTContractInfo({
-      veTotalSupply, veLockedCTR, userVeShare, userVeRewards: 0, userLocked: { amount, end: moment(end * 1000).add(1, 'week').unix() }
+      veTotalSupply, veLockedCTR, userVeShare, userVeRewards: 0, userLocked: { amount, end: moment(end * 1000).unix() }
     })
   }
 

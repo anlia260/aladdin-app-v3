@@ -10,6 +10,9 @@ import { basicCheck, cBN, fb4 } from 'utils'
 import Button from 'components/Button'
 import styles from './styles.module.scss'
 
+const WEEK = 86400 * 7;
+const YEARS = 86400 * 365;
+
 export default function ExtendModal({ onCancel, pageData, refreshAction }) {
   const { web3, currentAccount } = useWeb3()
   const [locktime, setLocktime] = useState(moment())
@@ -17,7 +20,6 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
   const [locking, setLocking] = useState(false)
   const { userLocked } = pageData.contractInfo
   const veCTR = useVeCTR()
-
 
   const handleLock = async () => {
     if (!basicCheck(web3, currentAccount)) return
@@ -51,9 +53,7 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
       return 0
     }
 
-    const timestamp = locktime.utc().unix()
-    const WEEK = 86400 * 7;
-    const YEARS = 86400 * 365;
+    const timestamp = locktime.unix()
 
     const unlock_time = Math.floor(timestamp / WEEK) * WEEK;
     const willBe = (unlock_time - moment().utc().unix()) / (4 * YEARS) * lockAmount
@@ -64,19 +64,29 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
 
   useEffect(() => {
     if (userLocked?.end) {
-      setLocktime(moment(userLocked?.end * 1000))
+      setLocktime(moment(userLocked?.end * 1000).add(1, 'week').startOf('day'))
     }
   }, [userLocked])
 
+  // align Thursday
+  const calc4 = (m) => {
+    let params = m.clone();
+    console.log('addtime:current', params.format('lll'), params.weekday())
+    // if (params.weekday() < 4) {
+    //   params = params.add(4 - params.weekday(), 'day')
+    // } else if (params.weekday() > 4) {
+    //   params = params.add(7 - params.weekday() + 4, 'day')
+    // }
+    // console.log('addtime', params.format('lll'), params.weekday(), params.unix(), params.unix() % (86400 * 7))
+
+    const unlock_time = Math.floor(params.unix() / WEEK) * WEEK;
+    console.log('addtime', moment(unlock_time * 1000).format('lll'), moment(unlock_time * 1000).weekday(), moment(unlock_time * 1000).unix(), moment(unlock_time * 1000).unix() % (86400 * 7))
+    return moment(unlock_time * 1000)
+  }
+
 
   const addTime = days => {
-    let params = moment(moment().add(days, 'day')).startOf('day')
-    console.log(params.weekday())
-    if (params.weekday() < 4) {
-      params = params.add(4 - params.weekday() + 1, 'day')
-    } else {
-      params = params.add(1, 'week')
-    }
+    const params = moment(moment.unix(userLocked?.end).add(days, 'day'))
     setLocktime(params)
   }
 
@@ -85,12 +95,12 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
     if (!userLocked?.end) {
       return false
     }
-    return current && current < moment(userLocked.end * 1000).endOf('day');
+    return current && current < moment(userLocked.end * 1000).add(1, 'week').startOf('day');
   };
 
   const days = useMemo(() => {
     const params = userLocked?.end ? moment().diff(moment(userLocked?.end * 1000).startOf('day'), 'days', true) : 0
-    return Math.abs(params)
+    return Math.abs(params) + 7
   }, [userLocked])
 
   const shortDate = useMemo(() => {
@@ -127,6 +137,7 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
       setCurrent(i.value)
     }
   }
+
 
   return (
     <Modal onCancel={onCancel}>
@@ -165,7 +176,7 @@ export default function ExtendModal({ onCancel, pageData, refreshAction }) {
 
       <div className="my-8">
         <div>Your starting voting power will be: {fb4(vePower)} veCTR</div>
-        <div>Unlocked Time: {locktime ? locktime.format('lll') : '-'}</div>
+        <div>Unlocked Time: {locktime ? calc4(locktime).format('YYYY-MM-DD HH:mm:ss UTCZ') : '-'}</div>
       </div>
 
       <div className={styles.actions}>
