@@ -1962,7 +1962,7 @@ export const VAULT_LIST_IFO = [
     zapTokens: [
       {
         symbol: 'tusdfraxbpCrv',
-        icon: fraxBPIcons,
+        icon: tusdIcons,
         address: config.convexVaultPool.tusdfraxbp,
         needZap: false,
         isLp: true,

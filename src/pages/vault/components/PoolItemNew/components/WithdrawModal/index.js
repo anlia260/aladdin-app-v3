@@ -137,7 +137,7 @@ export default function WithdrawModal(props) {
         <div className="color-white">Withdraw</div>
         <div className={`color-light-blue ${styles.itemWrap}`}>
           <div className="relative">
-            <img src={info.logo} alt={info.name} className="w-8 mr-2" />
+            <img src={Array.isArray(info.logo) ? info.logo[0] : info.logo} alt={info.name} className="w-8 mr-2" />
             <img src={crvLogo} alt={info.name} className="absolute w-4 h-4 right-1/3 bottom-0" />
           </div>
           {info.stakeTokenSymbol}
