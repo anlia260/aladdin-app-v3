@@ -12,16 +12,6 @@ const routes = [
     exact: true,
   },
   {
-    path: '/farming',
-    Component: lazy(() => import('pages/farming')),
-    exact: true,
-  },
-  {
-    path: '/lock',
-    Component: lazy(() => import('pages/lock')),
-    exact: true,
-  },
-  {
     path: '/dataPanel',
     Component: lazy(() => import('pages/test')),
     exact: true,

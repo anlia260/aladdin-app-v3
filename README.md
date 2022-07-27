@@ -18,7 +18,7 @@ http://concentrator.aladdin.club/
 
 ## Version
 
-version=1535
+version=1539
 
 ## Ifo arr length = 10
 

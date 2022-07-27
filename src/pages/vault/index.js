@@ -129,7 +129,7 @@ const VaultPage = () => {
                 key={index}
               />
             ))}
-          </div>
+            </div>
         </div>
 
         <div className="mb-16">
@@ -155,26 +155,26 @@ const VaultPage = () => {
             <div className={styles.poolsList}>
               <div className={styles.scrollOut}>
                 <div className={styles.scrollIn}>
-                  <div className={styles.poolsListHeader}>
-                    <div>Pool Name</div>
-                    <div>APR</div>
-                    <div>TVL</div>
-                    <div>Deposits</div>
-                    <div />
-                  </div>
-                  {VAULT_NEW_LIST_DATA.map((item, index) => (
-                    <PoolItemNew
-                      item={item}
-                      // harvestList={harvestList}
-                      triggerChange={str => {
-                        setRefreshStatusTrigger(prev => prev + 1)
-                        setRefreshTrigger(`${Math.random()}_${str}`)
-                      }}
-                      // poolItem={ConvexVaultIFOInfo.listInfo[index]}
-                      key={index}
-                    />
-                  ))}
-                  {/* <div
+                <div className={styles.poolsListHeader}>
+                  <div>Pool Name</div>
+                  <div>APR</div>
+                  <div>TVL</div>
+                  <div>Deposits</div>
+                  <div />
+                </div>
+                {VAULT_NEW_LIST_DATA.map((item, index) => (
+                  <PoolItemNew
+                    item={item}
+                    // harvestList={harvestList}
+                    triggerChange={str => {
+                      setRefreshStatusTrigger(prev => prev + 1)
+                      setRefreshTrigger(`${Math.random()}_${str}`)
+                    }}
+                    // poolItem={ConvexVaultIFOInfo.listInfo[index]}
+                    key={index}
+                  />
+                ))}
+                {/* <div
                   className={cn('flex items-center justify-center gap-4 py-8 color-blue', styles.toggleAllPools)}
                   onClick={() => setAllConvexPoolVisible(prev => !prev)}
                 >

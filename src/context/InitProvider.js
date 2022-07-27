@@ -1,5 +1,5 @@
 import { useEffect, useContext, createContext, useState } from 'react'
-import { cBN, getLPTokenPrice, getTokenPrice } from 'utils'
+import { cBN, getLPTokenPrice, getTokenPrice, inPc } from 'utils'
 import axios from 'axios'
 import config from 'config'
 import { useDebounceEffect } from 'ahooks'
@@ -49,6 +49,20 @@ const initPrice = async () => {
   await getTokenPrice(priceToken)
 }
 
+let lpPrice = null;
+let lpPriceTime = 0;
+const initLpPrice = async () => {
+  const _currTime = new Date().getTime()
+  if (!lpPrice || _currTime > (lpPriceTime + 1000 * 60 * 3)) {
+    const json = await axios.get('https://concentrator-api.aladdin.club/data/lp/price', { timeout: 2000 })
+    if (json.data.code == 200) {
+      lpPrice = json.data.data;
+      lpPriceTime = new Date().getTime()
+    }
+  }
+  return lpPrice;
+}
+
 const getCtrCrvBalancer = async () => {
   const BalancerContract = BALANCER()
   const ctrCRV = await BalancerContract.methods.getPoolTokens(config.BalancerPools.CTRACRVPOOLS).call()
@@ -61,11 +75,11 @@ const useInitProvider = () => {
 
   const [data, setData] = useState(INIT)
 
-  const ifoSourceList = VAULT_LIST_IFO.filter(i => !i.isExpired).map(i => {
+  const ifoSourceList = VAULT_LIST_IFO.map(i => {
     i.isIfo = true
     return i
   })
-  const oldVaultsList = VAULT_LIST.filter(i => !i.isExpired)
+  const oldVaultsList = VAULT_LIST
 
   const fetchAllPoolData = async arr => {
     const WEB3 = checkChain === CHAINSTATUS['checkWeb3'] ? web3Alc : web3
@@ -78,15 +92,17 @@ const useInitProvider = () => {
       })
       console.log('vaultlistdata => basicCalls.length', basicCalls.length)
       const allVaultsBasicInfo = await multiCall(WEB3, currentAccount, ...basicCalls)
-      const lpPrice = await Promise.all(list.map(item => getLPTokenPrice(WEB3, item.tvlPriceTokenId)))
+      // const lpPrice = await Promise.all(list.map(item => getLPTokenPrice(WEB3, item.tvlPriceTokenId)))
+      const lpPrice = inPc ? await Promise.all(list.map(item => getLPTokenPrice(WEB3, item.tvlPriceTokenId))) : await initLpPrice()
 
       const res = allVaultsBasicInfo.length > 0 ? allVaultsBasicInfo : AllVaults
       const listData = res.map((item, i) => {
         const { 0: totalUnderlying, 6: withdrawFeePercentage, 1: totalShare, 2: accRewardPerShare } = item || {
           0: 0, 6: 0, 1: 0, 2: 0
         }
-        const lpTokenPrice = lpPrice[i]
-
+        // const lpTokenPrice = lpPrice[i]
+        const _lpAddress = list[i].stakeTokenContractAddress;
+        const lpTokenPrice = inPc ? lpPrice[i] : lpPrice[_lpAddress.toLowerCase()].usd
         return {
           ...list[i],
           totalUnderlying,

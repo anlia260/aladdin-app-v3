@@ -52,16 +52,6 @@ export default function AppHeader(props) {
                 Vault
               </NavLink>
             </li>
-            {/* <li>
-              <NavLink className={styles.link} activeClassName={styles.active} to="/farming">
-                Farming
-              </NavLink>
-            </li> */}
-            <li>
-              <NavLink className={styles.link} activeClassName={styles.active} to="/lock">
-                Lock
-              </NavLink>
-            </li>
           </ul>
           <div className="flex items-center flex-wrap">
             <MenuOutlined className={styles.mobileMenu} onClick={()=>setDrawerVisible(true)} />

@@ -97,6 +97,15 @@ export const getUniswapLPPrice = async (web3, lpAddress, underlyingAssets) => {
   return lpPrice
 }
 
+export const inPc = (() => {
+  var sUserAgent = navigator.userAgent;
+  if (sUserAgent.indexOf('Android') > -1 || sUserAgent.indexOf('iPhone') > -1 || sUserAgent.indexOf('iPad') > -1 || sUserAgent.indexOf('iPod') > -1 || sUserAgent.indexOf('Symbian') > -1) {
+    return false
+  } else {
+    return true
+  }
+})();
+
 // outside call times = 3/4
 let cacheTime = 0;
 let cacheTimeStep = 1000 * 60 * 5;
@@ -170,7 +179,7 @@ export const getCurveLPPrice2 = async (web3, lpAddress, swapPoolABI, swapPoolCon
     cacheTime = _currTime
     cachedLpPrice[lpAddress] = lpPrice;
   } catch (e) {
-    console.error('[getCurveLPPrice2]', lpAddress, e)
+    console.error('[getCurveLPPrice2]', lpAddress, e, e.toString())
   }
   return lpPrice
 }

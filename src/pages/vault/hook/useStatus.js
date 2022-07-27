@@ -13,7 +13,7 @@ const contTotal = 2500000000000000000000000
 
 const useIFOStatus = refreshTrigger => {
   const { web3, currentAccount, checkChain, getBlockNumber } = useWeb3()
-  const convexVaultsIFOContract = useContract(config.contracts.concentratorIFOVault, abi.AladdinConcentratorContVaultABI)
+  const convexVaultsIFOContract = useContract(config.contracts.concentratorIFOVault, abi.AladdinConcentratorNewVaultABI)
   const tokenCRTContract = useContract(config.contracts.aladdinCTR, abi.AladdinCTRABI)
   const [ifoInfo, setIfoInfo] = useState({})
 
@@ -24,18 +24,19 @@ const useIFOStatus = refreshTrigger => {
     const apis = [startTime(), endTime(), ctrMined(), balanceOf(currentAccount)].concat(VAULT_LIST_IFO.map(i => pendingCTR(i.id, currentAccount)))
     const [sTime, eTime, contReleased, crtBalance, ...pendingRewards] = await multiCall(web3, currentAccount, ...apis)
 
-    console.log('useStatus sTime ->', sTime, pendingRewards)
-    console.log('useStatus eTime ->', eTime, new Date(eTime * 1000))
-    console.log('useStatus contTotal ->', contTotal, fb4(contTotal))
-    console.log('useStatus contReleased ->', contReleased, fb4(contReleased))
-    console.log('useStatus pendingRewards ->', pendingRewards)
-    console.log('useStatus crtBalance ->', fb4(crtBalance))
-
+    // console.log('useStatus sTime ->', sTime, pendingRewards)
+    // console.log('useStatus eTime ->', eTime, new Date(eTime * 1000))
+    // console.log('useStatus contTotal ->', contTotal, fb4(contTotal))
+    // console.log('useStatus contReleased ->', contReleased, fb4(contReleased))
+    // console.log('useStatus pendingRewards ->', pendingRewards)
+    // console.log('useStatus crtBalance ->', fb4(crtBalance))
+    const { timestamp } = await web3.eth.getBlock('latest')
     const status = () => {
-      if (moment().isBefore(moment(sTime * 1000))) {
+      const now = moment(timestamp * 1000) || moment()
+      if (now.isBefore(moment(sTime * 1000))) {
         return 'ready'
       }
-      if (moment().isBetween(moment(sTime * 1000), moment(eTime * 1000))) {
+      if (now.isBetween(moment(sTime * 1000), moment(eTime * 1000))) {
         if (cBN(contReleased).isEqualTo(contTotal)) {
           return 'sellout'
         }
@@ -44,7 +45,6 @@ const useIFOStatus = refreshTrigger => {
         return 'ended'
       }
     }
-
     setIfoInfo({
       sTime,
       eTime,
@@ -58,7 +58,7 @@ const useIFOStatus = refreshTrigger => {
 
   useEffect(() => {
     if (checkChain && convexVaultsIFOContract) {
-      fetchCotractInfo()
+      // fetchCotractInfo()
     }
   }, [web3, convexVaultsIFOContract, getBlockNumber(), refreshTrigger, checkChain])
 

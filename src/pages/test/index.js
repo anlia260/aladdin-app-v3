@@ -31,9 +31,12 @@ const TestPage = () => {
     let i = 0;
     loadingFn(true)
     for (const pid of pids) {
+      if (type == 'New' && [8, 18, 20].indexOf(pid) > -1) {
+        continue;
+      }
       const poolName = type == 'New' ? VAULT_NEW_LIST_DATA[i].name : VAULT_LIST_DATA[i].name
-      i++;
       try {
+        i++;
         const reward = await vaultContract.methods.harvest(pid, currentAccount, 0).call({ from: currentAccount, gas: 5000000 })
         console.log('harvestPool--', pid, reward / 1e18, poolName)
         const _num = reward / 1e18;
@@ -49,7 +52,8 @@ const TestPage = () => {
           name: poolName,
           num: 0
         })
-        console.log('e---', e)
+        console.log('e---', e, poolName)
+        continue;
       }
     }
     loadingFn(false)

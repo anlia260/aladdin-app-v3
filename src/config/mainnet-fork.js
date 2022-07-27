@@ -1,8 +1,8 @@
 import tokensInfo from './tokens'
-const CHAIN_ID = 10548
+const CHAIN_ID = 10540
 
 const NETWORK_NAME = 'mainnet'
-const devRpcurl = [10548, 'http://47.242.46.45:10548']
+const devRpcurl = [10540, 'http://47.242.46.45:10540']
 
 const contracts = {
   ...tokensInfo.contracts

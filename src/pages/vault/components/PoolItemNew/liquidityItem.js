@@ -137,8 +137,8 @@ export default function LiquidityItem(props) {
               <img src={ACRVIcon} alt="acrv-icon" className="w-8 mr-2" />
               CTR
               <div className={styles.ifoTag}>IFO</div>
-            </span >
-          </div >
+            </span>
+          </div>
 
           <div className='flex items-start flex-col md:flex-row md:items-center gap-4 mt-8 mb-6 md:8'>
             <div className={styles.actionHint}>
@@ -178,7 +178,7 @@ export default function LiquidityItem(props) {
             <Button theme="deepBlue" onClick={handleWithdraw}>
               Withdraw
             </Button>
-            {/* <Button theme="deepBlue" onClick={() => handleWithdraw(true)}>
+            <Button theme="deepBlue" onClick={() => handleWithdraw(true)}>
               Withdraw & Claim
             </Button>
             <Button theme="deepBlue" loading={claiming} onClick={handleClaim}>
@@ -189,27 +189,22 @@ export default function LiquidityItem(props) {
             </Button> */}
           </div>
         </div>
-      )
-      }
-      {
-        liquidityDepositVisible && (
-          <LiquidityDepositModal
-            info={item}
-            setRefreshTrigger={setRefreshTrigger}
-            onCancel={() => setLiquidityDepositVisible(false)}
-          />
-        )
-      }
-      {
-        liquidityWithdrawVisible && (
-          <LiquidityWithdrawModal
-            info={item}
-            withdrawClaim={withdrawClaim}
-            setRefreshTrigger={setRefreshTrigger}
-            onCancel={() => setLiquidityWithdrawVisible(false)}
-          />
-        )
-      }
-    </div >
+      )}
+      {liquidityDepositVisible && (
+        <LiquidityDepositModal
+          info={item}
+          setRefreshTrigger={setRefreshTrigger}
+          onCancel={() => setLiquidityDepositVisible(false)}
+        />
+      )}
+      {liquidityWithdrawVisible && (
+        <LiquidityWithdrawModal
+          info={item}
+          withdrawClaim={withdrawClaim}
+          setRefreshTrigger={setRefreshTrigger}
+          onCancel={() => setLiquidityWithdrawVisible(false)}
+        />
+      )}
+    </div>
   )
 }

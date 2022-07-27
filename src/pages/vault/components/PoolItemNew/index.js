@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import cn from 'classnames'
 import { useUpdateEffect } from 'ahooks'
 import ArrowDown from 'assets/arrow-down.svg'
@@ -21,6 +21,7 @@ export default function PoolItemNew(props) {
   const { item, poolItem = {}, harvestList } = props
   const { earned, tvl, ctrApy, ctrCurrentApy, userInfo, convexInfo } = item
   const [active, setActive] = useState(false)
+  const [displayPool, setDisplayPool] = useState(false)
 
   const [depositVisible, setDepositVisible] = useState(false)
   const [withdrawVisible, setWithdrawVisible] = useState(false)
@@ -31,7 +32,7 @@ export default function PoolItemNew(props) {
 
   useUpdateEffect(() => {
     const refreshItmeIndex =
-      VAULT_LIST.filter(i => !i.isExpired).length + VAULT_LIST_IFO.filter(i => !i.isExpired).findIndex(i => i.id === item.id)
+      VAULT_LIST.length + VAULT_LIST_IFO.findIndex(i => i.id === item.id)
     props.triggerChange(refreshItmeIndex)
   }, [refreshTrigger])
 
@@ -53,12 +54,35 @@ export default function PoolItemNew(props) {
   const showCurrentApy = cBN(convexInfo?.curveApys?.baseApy ?? 0)
     .plus(ctrCurrentApy ?? 0)
     .toFixed(2)
-  const displayPool = item.isExpired && cBN(earned || 0).isZero()
+
+  useEffect(() => {
+    const _displayPool = !!(item.isExpired && cBN(earned || 0).isZero())
+    setDisplayPool(_displayPool)
+  }, [earned])
+
+  const renderLogo = (item) => {
+    const { logo, name } = item
+
+
+    if (Array.isArray(logo)) {
+      const [src1, src2] = logo
+      console.log(src1, src2, "fuck")
+
+
+      return <div className="relative">
+        <img src={src1} alt={item.name} className="w-10 mr-2" />
+        <img src={src2} alt={item.name} className="absolute w-4 h-4 right-1/3 bottom-0" />
+      </div>
+    }
+
+    return <img src={logo} alt={name} className={styles.icon} />
+  }
+
   return (
     <div className={styles.poolItemNew} style={{ display: displayPool ? 'none' : 'block' }}>
       <div className={cn(styles.briefLine, active && styles.active)} onClick={() => toggleActive()}>
         <div className={styles.poolName}>
-          <img src={item.logo} alt={item.name} className={styles.icon} />
+          {renderLogo(item)}
           <div>{item.name}</div>
         </div>
         <div>{isNaN(showApy) ? '-' : showApy}%</div>
@@ -76,7 +100,7 @@ export default function PoolItemNew(props) {
             <span className={styles.actionTag}>DEPOSIT</span>
             <span className={styles.actionToken}>
               <div className="relative">
-                <img src={item.logo} alt={item.name} className="w-8 mr-2" />
+                <img src={Array.isArray(item.logo) ? item.logo[0] : item.logo} alt={item.name} className="w-8 mr-2" />
                 <img src={crvLogo} alt={item.name} className="absolute w-4 h-4 right-1/3 bottom-0" />
               </div>
               {item.name}
@@ -94,7 +118,7 @@ export default function PoolItemNew(props) {
             <a target="_blank" href={convexInfo?.depositInfo.url} className="font-medium underline">
               {item.nameShow}
             </a>{' '}
-            (without staking in the Curve gauge), then stake{' '}
+            (without staking in the Curve gague), then stake{' '}
             <span className="font-medium text-white">{item.stakeTokenSymbol}</span> here.<br />
             During the IFO, vault rewards $aCRV will be replaced by <span className="text-white font-medium">$CTR</span> 1:1
           </div>
@@ -102,7 +126,7 @@ export default function PoolItemNew(props) {
           <div className={styles.aprSection}>
             <span className={styles.aprTag}>APY:</span>
             <span className={styles.aprValue}>{isNaN(showApy) ? '-' : showApy}%</span> <Tip
-              title={`Current Apy : ${isNaN(showCurrentApy) ? '-' : showCurrentApy}% <br/> Base Curve vAPR: ${(convexInfo?.curveApys?.baseApy ?? 0).toFixed(2)}% <br/> CTR APR: ${isNaN(ctrCurrentApy) ? '-' : ctrCurrentApy || 0}%`}
+              title={`Current Apy : ${isNaN(showCurrentApy) ? '-' : showCurrentApy}% <br/> Base Curve vAPR: ${(convexInfo?.curveApys?.baseApy ?? 0).toFixed(2)}% <br/> CTR APR: ${isNaN(ctrCurrentApy) || cBN(ctrApy).isLessThan(0) ? '< 0.00' : ctrCurrentApy || 0}%`}
             />
           </div>
 
@@ -111,12 +135,12 @@ export default function PoolItemNew(props) {
               Base Curve vAPR: <span className={styles.moreInfoValue}>{(convexInfo?.curveApys?.baseApy ?? 0).toFixed(2)}%</span>
             </div>
             <div>
-              CTR APR: <span className={styles.moreInfoValue}>{isNaN(ctrApy) ? '-' : ctrApy || 0}%</span>
+              CTR APR: <span className={styles.moreInfoValue}>{isNaN(ctrApy) || cBN(ctrApy).isLessThan(0) ? '< 0.01' : ctrApy || 0}%</span>
             </div>
           </div>
 
           <div className={styles.actions}>
-            <Button theme="lightBlue" disabled={item.closeDeposit} onClick={handleDeposit}>
+            <Button theme="lightBlue" disabled={item.closeDeposit || item.isExpired} onClick={handleDeposit}>
               Deposit
             </Button>
             <Button theme="deepBlue" onClick={handleWithdraw}>

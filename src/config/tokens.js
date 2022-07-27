@@ -16,6 +16,9 @@ import AGEURIcons from 'assets/tokens/3eur-pool.png'
 import EURTIcons from 'assets/tokens/eurt.png'
 import EURSIcons from 'assets/tokens/eurs.png'
 import FPIIcon from 'assets/tokens/fpifrax.png'
+import fraxBPIcons from 'assets/tokens/fraxusdc.png'
+import siloIcons from 'assets/tokens/silo.png'
+import tusdIcons from 'assets/tokens/tusd.png'
 
 
 const contracts = {
@@ -65,10 +68,15 @@ const contracts = {
   curveD3poolSwap: '0xBaaa1F5DbA42C3389bDbc2c9D2dE134F5cD0Dc89',
   curveMusdSwap: '0x8474DdbE98F5aA3179B3B3F5942D724aFcdec9f6',
 
+  susdfraxbpSwap: '0xe3c190c57b5959Ae62EfE3B6797058B76bA2f5eF',
+  tusdSwap: '0xecd5e75afb02efa118af914515d6521aabd189f1',
+  busdfraxbpSwap: '0x8fdb0bB9365a46B145Db80D0B1C5C5e979C84190',
+  alusdfraxbpSwap: '0xB30dA2376F63De30b42dC055C93fa474F31330A5',
+  silofraxSwap: '0x9a22CDB1CA1cdd2371cD5BB5199564C4E89465eb',
+  tusdfraxbpSwap: '0x33baeDa08b8afACc4d3d07cf31d49FC1F1f3E893',
 
 
 
-  veCtr: '0xe4C09928d834cd58D233CD77B5af3545484B4968',
   multiCall: '0xeefba1e63905ef1d7acba5a8513c70307c1ce441',
 
   BalancerContract: '0xba12222222228d8ba445958a75a0704d566bf2c8'
@@ -129,6 +137,11 @@ const tokens = {
   mUSD: '0xe2f2a5C287993345a840Db3B0845fbC70f5935a5',
 
   CTRACRV: '0x80A8eA2f9EBFC2Db9a093BD46E01471267914E49',
+
+  crvFRAX: '0x3175Df0976dFA876431C2E9eE6Bc45b65d3473CC',
+  TUSD: '0x0000000000085d4780B73119b644AE5ecd22b376',
+  SILO: '0x6f80310CA7F2C654691D1383149Fa1A57d8AB1f8'
+
 }
 
 const BalancerPools = {
@@ -182,7 +195,11 @@ const TOKENS_INFO = {
   fei: ['fei-usd', tokens.fei, 18],
   mUSD: ['musd', tokens.mUSD, 18],
 
-  cvxfxs: ['', tokens.cvxfxs, 18]
+  cvxfxs: ['', tokens.cvxfxs, 18],
+  crvFRAX: ['frax', tokens.crvFRAX, 18],
+  FRAXBP: ['frax', tokens.crvFRAX, 18],
+  TUSD: ['true-usd', tokens.TUSD, 18],
+  SILO: ['silo-finance', tokens.SILO, 18]
 }
 
 const zapTokens = {
@@ -432,6 +449,27 @@ const zapTokens = {
     decimals: TOKENS_INFO.mUSD[2],
     address: TOKENS_INFO.mUSD[1],
     needZap: true,
+  },
+  crvFRAX: {
+    symbol: 'crvFRAX',
+    icon: 'frax',
+    decimals: TOKENS_INFO.crvFRAX[2],
+    address: TOKENS_INFO.crvFRAX[1],
+    needZap: true,
+  },
+  TUSD: {
+    symbol: 'TUSD',
+    icon: tusdIcons,
+    decimals: TOKENS_INFO.TUSD[2],
+    address: TOKENS_INFO.TUSD[1],
+    needZap: true,
+  },
+  SILO: {
+    symbol: 'SILO',
+    icon: siloIcons,
+    decimals: TOKENS_INFO.SILO[2],
+    address: TOKENS_INFO.SILO[1],
+    needZap: true,
   }
 }
 const convexVaultPool = {
@@ -467,10 +505,14 @@ const convexVaultPool = {
   lusd: '0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA',
   // usdn: '0x4f3E8F405CF5aFC05D68142F3783bDfE13811522',
   d3pool: '0xBaaa1F5DbA42C3389bDbc2c9D2dE134F5cD0Dc89',
-  musd: '0x1AEf73d49Dedc4b1778d0706583995958Dc862e6'
+  musd: '0x1AEf73d49Dedc4b1778d0706583995958Dc862e6',
 
-
-
+  susdfraxbp: '0xe3c190c57b5959Ae62EfE3B6797058B76bA2f5eF',
+  tusd: '0xecd5e75afb02efa118af914515d6521aabd189f1',
+  busdfraxbp: '0x8fdb0bB9365a46B145Db80D0B1C5C5e979C84190',
+  alusdfraxbp: '0xB30dA2376F63De30b42dC055C93fa474F31330A5',
+  silofrax: '0x2302aaBe69e6E7A1b0Aa23aAC68fcCB8A4D2B460',
+  tusdfraxbp: '0x33baeDa08b8afACc4d3d07cf31d49FC1F1f3E893'
 
 }
 
@@ -792,6 +834,69 @@ const CONVEXVAULTPOOL_INFO = {
       TOKENS_INFO.crv3pool
     ],
   },
+
+  [convexVaultPool.susdfraxbp]: {
+    lpName: 'susdfraxbp',
+    address: convexVaultPool.susdfraxbp,
+    swapPoolABI: abi.susdfraxbpSwapABI,
+    swapPoolAddress: contracts.susdfraxbpSwap,
+    underlyingAssets: [
+      TOKENS_INFO.SUSD,
+      TOKENS_INFO.FRAXBP
+    ],
+  },
+  [convexVaultPool.tusd]: {
+    lpName: 'tusd',
+    address: convexVaultPool.tusd,
+    swapPoolABI: abi.tusdSwapABI,
+    swapPoolAddress: contracts.tusdSwap,
+    underlyingAssets: [
+      TOKENS_INFO.TUSD,
+      TOKENS_INFO.crv3pool
+    ],
+  },
+  [convexVaultPool.busdfraxbp]: {
+    lpName: 'busdfraxbp',
+    address: convexVaultPool.busdfraxbp,
+    swapPoolABI: abi.busdfraxbpSwapABI,
+    swapPoolAddress: contracts.busdfraxbpSwap,
+    underlyingAssets: [
+      TOKENS_INFO.busd,
+      TOKENS_INFO.FRAXBP
+    ],
+  },
+  [convexVaultPool.alusdfraxbp]: {
+    lpName: 'alusdfraxbp',
+    address: convexVaultPool.alusdfraxbp,
+    swapPoolABI: abi.alusdfraxbpSwapABI,
+    swapPoolAddress: contracts.alusdfraxbpSwap,
+    underlyingAssets: [
+      TOKENS_INFO.alUSD,
+      TOKENS_INFO.FRAXBP
+    ],
+  },
+  [convexVaultPool.silofrax]: {
+    lpName: 'silofrax',
+    address: convexVaultPool.silofrax,
+    swapPoolABI: abi.silofraxSwapABI,
+    swapPoolAddress: contracts.silofraxSwap,
+    underlyingAssets: [
+      TOKENS_INFO.SILO,
+      TOKENS_INFO.frax
+    ],
+  },
+  [convexVaultPool.tusdfraxbp]: {
+    lpName: 'tusdfraxbp',
+    address: convexVaultPool.tusdfraxbp,
+    swapPoolABI: abi.tusdfraxbpSwapABI,
+    swapPoolAddress: contracts.tusdfraxbpSwap,
+    underlyingAssets: [
+      TOKENS_INFO.TUSD,
+      TOKENS_INFO.FRAXBP
+    ],
+  },
+
+
 }
 
 export default {

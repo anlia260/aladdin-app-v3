@@ -17,7 +17,9 @@ import alETHIcon from 'assets/tokens/aleth.png'
 import fpifraxIcon from 'assets/tokens/fpifrax.png'
 import pool3eurIcon from 'assets/tokens/3eur-pool.png'
 
-import fraxusdcIcons from 'assets/tokens/sBTC.png'
+import fraxBPIcons from 'assets/tokens/fraxusdc.png'
+import siloIcons from 'assets/tokens/silo.png'
+import tusdIcons from 'assets/tokens/tusd.png'
 
 export const PRICE_API = [
   { tokens: ['steth'], api: 'https://stats.curve.fi/raw-stats/apys.json' },
@@ -626,6 +628,7 @@ export const VAULT_LIST_IFO = [
     stakeTokenDecimals: 18,
     rewardTokenSymbol: 'acrv',
     rewardTokenDecimals: 18,
+    isExpired: true,
     zapTokens: [
       {
         symbol: 'fraxCrv',
@@ -881,6 +884,7 @@ export const VAULT_LIST_IFO = [
     rewardTokenSymbol: 'CTR',
     rewardTokenDecimals: 18,
     site: 'convex',
+    isExpired: true,
     zapTokens: [
       {
         symbol: 'crv3pool',
@@ -912,50 +916,50 @@ export const VAULT_LIST_IFO = [
     ],
   },
 
-  {
-    logo: ironbankIcons,
-    id: 8,
-    apy: 0,
-    name: 'ironbank',
-    nameShow: 'Curve ironbank pool',
-    stakeTokenSymbol: 'ironbankCrv',
-    tvlPriceTokenId: 'curveLP-ironbank',
-    stakeTokenContractAddress: config.convexVaultPool.ironbank,
-    stakeTokenDecimals: 18,
-    rewardTokenSymbol: 'CTR',
-    rewardTokenDecimals: 18,
-    isShowEthApy: false,
-    site: 'convex',
-    zapTokens: [
-      {
-        symbol: 'ironbankCrv',
-        icon: ironbankIcons,
-        address: config.convexVaultPool.ironbank,
-        needZap: false,
-        isLp: true,
-      },
-      {
-        ...config.zapTokens.ETH,
-        "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x46092dded6da1bf5dbdf597c45fcfaa3194e53ecfeaf"]
-      },
-      {
-        ...config.zapTokens.WETH,
-        "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x46092dded6da1bf5dbdf597c45fcfaa3194e53ecfeaf"]
-      },
-      {
-        ...config.zapTokens.USDC,
-        "routes": ["0x56092dded6da1bf5dbdf597c45fcfaa3194e53ecfeaf"]
-      },
-      {
-        ...config.zapTokens.DAI,
-        "routes": ["0x42092dded6da1bf5dbdf597c45fcfaa3194e53ecfeaf"]
-      },
-      {
-        ...config.zapTokens.USDT,
-        "routes": ["0x6a092dded6da1bf5dbdf597c45fcfaa3194e53ecfeaf"]
-      },
-    ],
-  },
+  // {
+  //   logo: ironbankIcons,
+  //   id: 8,
+  //   apy: 0,
+  //   name: 'ironbank',
+  //   nameShow: 'Curve ironbank pool',
+  //   stakeTokenSymbol: 'ironbankCrv',
+  //   tvlPriceTokenId: 'curveLP-ironbank',
+  //   stakeTokenContractAddress: config.convexVaultPool.ironbank,
+  //   stakeTokenDecimals: 18,
+  //   rewardTokenSymbol: 'CTR',
+  //   rewardTokenDecimals: 18,
+  //   isShowEthApy: false,
+  //   site: 'convex',
+  //   zapTokens: [
+  //     {
+  //       symbol: 'ironbankCrv',
+  //       icon: ironbankIcons,
+  //       address: config.convexVaultPool.ironbank,
+  //       needZap: false,
+  //       isLp: true,
+  //     },
+  //     {
+  //       ...config.zapTokens.ETH,
+  //       "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x46092dded6da1bf5dbdf597c45fcfaa3194e53ecfeaf"]
+  //     },
+  //     {
+  //       ...config.zapTokens.WETH,
+  //       "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x46092dded6da1bf5dbdf597c45fcfaa3194e53ecfeaf"]
+  //     },
+  //     {
+  //       ...config.zapTokens.USDC,
+  //       "routes": ["0x56092dded6da1bf5dbdf597c45fcfaa3194e53ecfeaf"]
+  //     },
+  //     {
+  //       ...config.zapTokens.DAI,
+  //       "routes": ["0x42092dded6da1bf5dbdf597c45fcfaa3194e53ecfeaf"]
+  //     },
+  //     {
+  //       ...config.zapTokens.USDT,
+  //       "routes": ["0x6a092dded6da1bf5dbdf597c45fcfaa3194e53ecfeaf"]
+  //     },
+  //   ],
+  // },
 
   {
     logo: `${cryptoIcons}#mim`,
@@ -1109,7 +1113,8 @@ export const VAULT_LIST_IFO = [
   },
 
   {
-    logo: susdIcons,
+    // logo: susdIcons,
+    logo: `${cryptoIcons}#susd`,
     id: 12,
     apy: 0,
     name: 'sUSD',
@@ -1158,7 +1163,8 @@ export const VAULT_LIST_IFO = [
   },
 
   {
-    logo: sbtcIcons,
+    // logo: sbtcIcons,
+    logo: `${cryptoIcons}#sbtc`,
     id: 13,
     apy: 0,
     name: 'sbtc',
@@ -1207,7 +1213,8 @@ export const VAULT_LIST_IFO = [
   },
 
   {
-    logo: sethIcons,
+    // logo: sethIcons,
+    logo: `${cryptoIcons}#seth`,
     id: 14,
     apy: 0,
     name: 'seth',
@@ -1384,46 +1391,46 @@ export const VAULT_LIST_IFO = [
     ],
   },
 
-  {
-    logo: compoundIcons,
-    id: 18,
-    apy: 0,
-    name: 'Compound',
-    nameShow: 'Curve Compound pool',
-    stakeTokenSymbol: 'CompoundCrv',
-    tvlPriceTokenId: 'curveLP-Compound',
-    stakeTokenContractAddress: config.convexVaultPool.Compound,
-    stakeTokenDecimals: 18,
-    rewardTokenSymbol: 'CTR',
-    rewardTokenDecimals: 18,
-    isShowEthApy: false,
-    site: 'convex',
-    zapTokens: [
-      {
-        symbol: 'CompoundCrv',
-        icon: compoundIcons,
-        address: config.convexVaultPool.Compound,
-        needZap: false,
-        isLp: true,
-      },
-      {
-        ...config.zapTokens.ETH,
-        "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x550beb21209ae4c2c9ff2a86aca31e123764a3b6bc06"]
-      },
-      {
-        ...config.zapTokens.WETH,
-        "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x550beb21209ae4c2c9ff2a86aca31e123764a3b6bc06"]
-      },
-      {
-        ...config.zapTokens.USDC,
-        "routes": ["0x550beb21209ae4c2c9ff2a86aca31e123764a3b6bc06"]
-      },
-      {
-        ...config.zapTokens.DAI,
-        "routes": ["0x410beb21209ae4c2c9ff2a86aca31e123764a3b6bc06"]
-      }
-    ],
-  },
+  // {
+  //   logo: compoundIcons,
+  //   id: 18,
+  //   apy: 0,
+  //   name: 'Compound',
+  //   nameShow: 'Curve Compound pool',
+  //   stakeTokenSymbol: 'CompoundCrv',
+  //   tvlPriceTokenId: 'curveLP-Compound',
+  //   stakeTokenContractAddress: config.convexVaultPool.Compound,
+  //   stakeTokenDecimals: 18,
+  //   rewardTokenSymbol: 'CTR',
+  //   rewardTokenDecimals: 18,
+  //   isShowEthApy: false,
+  //   site: 'convex',
+  //   zapTokens: [
+  //     {
+  //       symbol: 'CompoundCrv',
+  //       icon: compoundIcons,
+  //       address: config.convexVaultPool.Compound,
+  //       needZap: false,
+  //       isLp: true,
+  //     },
+  //     {
+  //       ...config.zapTokens.ETH,
+  //       "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x550beb21209ae4c2c9ff2a86aca31e123764a3b6bc06"]
+  //     },
+  //     {
+  //       ...config.zapTokens.WETH,
+  //       "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x550beb21209ae4c2c9ff2a86aca31e123764a3b6bc06"]
+  //     },
+  //     {
+  //       ...config.zapTokens.USDC,
+  //       "routes": ["0x550beb21209ae4c2c9ff2a86aca31e123764a3b6bc06"]
+  //     },
+  //     {
+  //       ...config.zapTokens.DAI,
+  //       "routes": ["0x410beb21209ae4c2c9ff2a86aca31e123764a3b6bc06"]
+  //     }
+  //   ],
+  // },
 
   {
     logo: `${cryptoIcons}#dola`,
@@ -1477,58 +1484,58 @@ export const VAULT_LIST_IFO = [
       }
     ],
   },
-  {
-    logo: busdIcons,
-    id: 20,
-    apy: 0,
-    name: 'busdv2',
-    nameShow: 'Curve busdv2 pool',
-    stakeTokenSymbol: 'busdv2Crv',
-    tvlPriceTokenId: 'curveLP-busdv2',
-    stakeTokenContractAddress: config.convexVaultPool.busdv2,
-    stakeTokenDecimals: 18,
-    rewardTokenSymbol: 'CTR',
-    rewardTokenDecimals: 18,
-    isShowEthApy: false,
-    site: 'convex',
-    zapTokens: [
-      {
-        symbol: 'busdv2Crv',
-        icon: busdIcons,
-        address: config.convexVaultPool.busdv2,
-        needZap: false,
-        isLp: true,
-      },
-      {
-        ...config.zapTokens.ETH,
-        "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b104807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
-      },
-      {
-        ...config.zapTokens.WETH,
-        "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b104807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
-      },
-      {
-        ...config.zapTokens.USDC,
-        "routes": ["0x6b104807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
-      },
-      {
-        ...config.zapTokens.DAI,
-        "routes": ["0x57104807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
-      },
-      {
-        ...config.zapTokens.USDT,
-        "routes": ["0x7f104807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
-      },
-      {
-        ...config.zapTokens.CRV3POOL,
-        "routes": ["0x550f4807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
-      },
-      {
-        ...config.zapTokens.BUSD,
-        "routes": ["0x410f4807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
-      }
-    ],
-  },
+  // {
+  //   logo: busdIcons,
+  //   id: 20,
+  //   apy: 0,
+  //   name: 'busdv2',
+  //   nameShow: 'Curve busdv2 pool',
+  //   stakeTokenSymbol: 'busdv2Crv',
+  //   tvlPriceTokenId: 'curveLP-busdv2',
+  //   stakeTokenContractAddress: config.convexVaultPool.busdv2,
+  //   stakeTokenDecimals: 18,
+  //   rewardTokenSymbol: 'CTR',
+  //   rewardTokenDecimals: 18,
+  //   isShowEthApy: false,
+  //   site: 'convex',
+  //   zapTokens: [
+  //     {
+  //       symbol: 'busdv2Crv',
+  //       icon: busdIcons,
+  //       address: config.convexVaultPool.busdv2,
+  //       needZap: false,
+  //       isLp: true,
+  //     },
+  //     {
+  //       ...config.zapTokens.ETH,
+  //       "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b104807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
+  //     },
+  //     {
+  //       ...config.zapTokens.WETH,
+  //       "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b104807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
+  //     },
+  //     {
+  //       ...config.zapTokens.USDC,
+  //       "routes": ["0x6b104807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
+  //     },
+  //     {
+  //       ...config.zapTokens.DAI,
+  //       "routes": ["0x57104807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
+  //     },
+  //     {
+  //       ...config.zapTokens.USDT,
+  //       "routes": ["0x7f104807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
+  //     },
+  //     {
+  //       ...config.zapTokens.CRV3POOL,
+  //       "routes": ["0x550f4807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
+  //     },
+  //     {
+  //       ...config.zapTokens.BUSD,
+  //       "routes": ["0x410f4807862aa8b2bf68830e4c8dc86d0e9a998e085a"]
+  //     }
+  //   ],
+  // },
   {
     logo: alETHIcon,
     id: 21,
@@ -1632,6 +1639,7 @@ export const VAULT_LIST_IFO = [
     rewardTokenDecimals: 18,
     isShowEthApy: false,
     site: 'convex',
+    isExpired: true,
     zapTokens: [
       {
         symbol: 'lusd',
@@ -1670,6 +1678,58 @@ export const VAULT_LIST_IFO = [
       }
     ],
   },
+  {
+    logo: tusdIcons,
+    id: 25,
+    apy: 0,
+    name: 'tusd',
+    nameShow: 'Curve tusd pool',
+    stakeTokenSymbol: 'tusdCrv',
+    tvlPriceTokenId: 'curveLP-tusd',
+    stakeTokenContractAddress: config.convexVaultPool.tusd,
+    stakeTokenDecimals: 18,
+    rewardTokenSymbol: 'CTR',
+    rewardTokenDecimals: 18,
+    isShowEthApy: false,
+    site: 'convex',
+    zapTokens: [
+      {
+        symbol: 'tusdCrv',
+        icon: tusdIcons,
+        address: config.convexVaultPool.tusd,
+        needZap: false,
+        isLp: true,
+      },
+      {
+        ...config.zapTokens.ETH,
+        "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b10ecd5e75afb02efa118af914515d6521aabd189f1"]
+      },
+      {
+        ...config.zapTokens.WETH,
+        "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b10ecd5e75afb02efa118af914515d6521aabd189f1"]
+      },
+      {
+        ...config.zapTokens.USDC,
+        "routes": ["0x6b10ecd5e75afb02efa118af914515d6521aabd189f1"]
+      },
+      {
+        ...config.zapTokens.DAI,
+        "routes": ["0x5710ecd5e75afb02efa118af914515d6521aabd189f1"]
+      },
+      {
+        ...config.zapTokens.USDT,
+        "routes": ["0x7f10ecd5e75afb02efa118af914515d6521aabd189f1"]
+      },
+      {
+        ...config.zapTokens.CRV3POOL,
+        "routes": ["0x550fecd5e75afb02efa118af914515d6521aabd189f1"]
+      },
+      {
+        ...config.zapTokens.TUSD,
+        "routes": ["0x410fecd5e75afb02efa118af914515d6521aabd189f1"]
+      }
+    ],
+  },
   /////////ignore////
   // {
   //   logo: `${cryptoIcons}#musd`,
@@ -1702,6 +1762,237 @@ export const VAULT_LIST_IFO = [
   //     config.zapTokens.MUSD
   //   ],
   // },
+  // {
+  //   logo: siloIcons,
+  //   id: 24,
+  //   apy: 0,
+  //   name: 'silofrax',
+  //   nameShow: 'Curve silofrax pool',
+  //   stakeTokenSymbol: 'silofraxCrv',
+  //   tvlPriceTokenId: 'curveLP-silofrax',
+  //   stakeTokenContractAddress: config.convexVaultPool.silofrax,
+  //   stakeTokenDecimals: 18,
+  //   rewardTokenSymbol: 'CTR',
+  //   rewardTokenDecimals: 18,
+  //   isShowEthApy: false,
+  //   site: 'convex',
+  //   zapTokens: [
+  //     {
+  //       symbol: 'silofrax',
+  //       icon: siloIcons,
+  //       address: config.convexVaultPool.silofrax,
+  //       needZap: false,
+  //       isLp: true,
+  //     },
+  //     {
+  //       ...config.zapTokens.USDC,
+  //       "routes": ["0x0501c63b0708e2f7e69cb8a1df0e1389a98c35a76d52", "0x55049a22cdb1ca1cdd2371cd5bb5199564c4e89465eb"]
+  //     },
+  //     {
+  //       ...config.zapTokens.FRAX,
+  //       "routes": ["0x55049a22cdb1ca1cdd2371cd5bb5199564c4e89465eb"]
+  //     },
+  //     {
+  //       ...config.zapTokens.SILO,
+  //       "routes": ["0x41049a22cdb1ca1cdd2371cd5bb5199564c4e89465eb"]
+  //     }
+  //   ],
+  // },
+
+  // {
+  //   logo: fraxBPIcons,
+  //   id: 24,
+  //   apy: 0,
+  //   name: 'susdfraxbp',
+  //   nameShow: 'Curve susdfraxbp pool',
+  //   stakeTokenSymbol: 'susdfraxbpCrv',
+  //   tvlPriceTokenId: 'curveLP-susdfraxbp',
+  //   stakeTokenContractAddress: config.convexVaultPool.susdfraxbp,
+  //   stakeTokenDecimals: 18,
+  //   rewardTokenSymbol: 'CTR',
+  //   rewardTokenDecimals: 18,
+  //   isShowEthApy: false,
+  //   site: 'convex',
+  //   zapTokens: [
+  //     {
+  //       symbol: 'susdfraxbp',
+  //       icon: fraxBPIcons,
+  //       address: config.convexVaultPool.susdfraxbp,
+  //       needZap: false,
+  //       isLp: true,
+  //     },
+  //     {
+  //       ...config.zapTokens.ETH,
+  //       "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  //     },
+  //     {
+  //       ...config.zapTokens.WETH,
+  //       "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  //     },
+  //     {
+  //       ...config.zapTokens.USDC,
+  //       "routes": ["0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  //     },
+  //     {
+  //       ...config.zapTokens.FRAX,
+  //       "routes": ["0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  //     },
+  //     {
+  //       ...config.zapTokens.crvFRAX,
+  //       "routes": ["0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  //     },
+  //     {
+  //       ...config.zapTokens.SUSD,
+  //       "routes": ["0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  //     },
+
+  //   ],
+  // },
+
+  // {
+  //   logo: fraxBPIcons,
+  //   id: 24,
+  //   apy: 0,
+  //   name: 'busdfraxbp',
+  //   nameShow: 'Curve busdfraxbp pool',
+  //   stakeTokenSymbol: 'busdfraxbpCrv',
+  //   tvlPriceTokenId: 'curveLP-busdfraxbp',
+  //   stakeTokenContractAddress: config.convexVaultPool.busdfraxbp,
+  //   stakeTokenDecimals: 18,
+  //   rewardTokenSymbol: 'CTR',
+  //   rewardTokenDecimals: 18,
+  //   isShowEthApy: false,
+  //   site: 'convex',
+  //   zapTokens: [
+  //     {
+  //       symbol: 'busdfraxbp',
+  //       icon: fraxBPIcons,
+  //       address: config.convexVaultPool.busdfraxbp,
+  //       needZap: false,
+  //       isLp: true,
+  //     },
+  // {
+  //   ...config.zapTokens.ETH,
+  //   "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  // },
+  // {
+  //   ...config.zapTokens.WETH,
+  //   "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  // },
+  // {
+  //   ...config.zapTokens.USDC,
+  //   "routes": ["0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  // },
+  // {
+  //   ...config.zapTokens.FRAX,
+  //   "routes": ["0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  // },
+  // {
+  //   ...config.zapTokens.crvFRAX,
+  //   "routes": ["0x5710ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  // },
+  // {
+  //   ...config.zapTokens.BUSD,
+  //   "routes": ["0x410fed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  // }
+  // ],
+  // },
+  // {
+  //   logo: fraxBPIcons,
+  //   id: 24,
+  //   apy: 0,
+  //   name: 'alusdfraxbp',
+  //   nameShow: 'Curve alusdfraxbp pool',
+  //   stakeTokenSymbol: 'alusdfraxbpCrv',
+  //   tvlPriceTokenId: 'curveLP-alusdfraxbp',
+  //   stakeTokenContractAddress: config.convexVaultPool.alusdfraxbp,
+  //   stakeTokenDecimals: 18,
+  //   rewardTokenSymbol: 'CTR',
+  //   rewardTokenDecimals: 18,
+  //   isShowEthApy: false,
+  //   site: 'convex',
+  //   zapTokens: [
+  //     {
+  //       symbol: 'alusdfraxbp',
+  //       icon: fraxBPIcons,
+  //       address: config.convexVaultPool.alusdfraxbp,
+  //       needZap: false,
+  //       isLp: true,
+  //     },
+  //     {
+  //       ...config.zapTokens.ETH,
+  //       "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  //     },
+  //     {
+  //       ...config.zapTokens.WETH,
+  //       "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  //     },
+  //     {
+  //       ...config.zapTokens.USDC,
+  //       "routes": ["0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  //     },
+  //     {
+  //       ...config.zapTokens.FRAX,
+  //       "routes": ["0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  //     },
+  //     {
+  //       ...config.zapTokens.crvFRAX,
+  //       "routes": ["0x5710ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  //     },
+  //     {
+  //       ...config.zapTokens.ALUSD,
+  //       "routes": ["0x550fed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+  //     },
+  //   ],
+  // },
+  {
+    logo: [tusdIcons, `${cryptoIcons}#frax`],
+    id: 29,
+    apy: 0,
+    name: 'tusdfraxbp',
+    nameShow: 'Curve tusdfraxbp pool',
+    stakeTokenSymbol: 'tusdfraxbpCrv',
+    tvlPriceTokenId: 'curveLP-tusdfraxbp',
+    stakeTokenContractAddress: config.convexVaultPool.tusdfraxbp,
+    stakeTokenDecimals: 18,
+    rewardTokenSymbol: 'CTR',
+    rewardTokenDecimals: 18,
+    isShowEthApy: false,
+    site: 'convex',
+    zapTokens: [
+      {
+        symbol: 'tusdfraxbpCrv',
+        icon: fraxBPIcons,
+        address: config.convexVaultPool.tusdfraxbp,
+        needZap: false,
+        isLp: true,
+      },
+      // {
+      //   ...config.zapTokens.ETH,
+      //   "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+      // },
+      // {
+      //   ...config.zapTokens.WETH,
+      //   "routes": ["0x050188e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+      // },
+      // {
+      //   ...config.zapTokens.USDC,
+      //   "routes": ["0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+      // },
+      // {
+      //   ...config.zapTokens.FRAX,
+      //   "routes": ["0x6b10ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+      // },
+      // {
+      //   ...config.zapTokens.crvFRAX,
+      //   "routes": ["0x5710ed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+      // },
+      // {
+      //   ...config.zapTokens.TUSD,
+      //   "routes": ["0x410fed279fdd11ca84beef15af5d39bb4d4bee23f0ca"]
+      // }
+    ],
+  }
 ]
 
 
@@ -1877,6 +2168,6 @@ export const LIQUIDITY_LIST_IFO = [
   },
 ]
 
-export const AllVaults = [...VAULT_LIST.filter(i => !i.isExpired), ...VAULT_LIST_IFO.filter(i => !i.isExpired).map(i => { i.isIfo = true; return i })]
+export const AllVaults = [...VAULT_LIST, ...VAULT_LIST_IFO.map(i => { i.isIfo = true; return i })]
 
 export default VAULT_LIST

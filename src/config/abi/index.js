@@ -32,8 +32,6 @@ import curveSUSDPoolSwapABI from './lpswap/curveSUSDPoolSwap'
 import curveFraxUsdcSwapABI from './lpswap/curveFraxUsdcSwap'
 
 
-import veCTR from './ve/veCTR'
-import veCTRFeeDistributor from './ve/veCTRFeeDistributor'
 import curveMimSwapABI from './lpswap/curveMimSwap'
 import curveIronbankSwapABI from './lpswap/curveIronbankSwap'
 import curveFpifraxSwapABI from './lpswap/curveFpifraxSwap'
@@ -50,21 +48,12 @@ import curveMusdSwapABI from './lpswap/curveMusdSwap'
 
 import ironbankABI from './lpswap/ironbank/abi.json'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import susdfraxbpSwapABI from './lpswap/susdfraxbpSwap.json'
+import tusdSwapABI from './lpswap/tusdSwap.json'
+import busdfraxbpSwapABI from './lpswap/busdfraxbpSwap.json'
+import alusdfraxbpSwapABI from './lpswap/alusdfraxbpSwap.json'
+import silofraxSwapABI from './lpswap/silofraxSwap.json'
+import tusdfraxbpSwapABI from './lpswap/tusdfraxbpSwap.json'
 
 
 export default {
@@ -96,8 +85,6 @@ export default {
   curveUstWormholeSwapABI,
   curveRenABI,
   curvePusdPoolSwapABI,
-  veCTR,
-  veCTRFeeDistributor,
   curveSbtcPoolSwapABI,
   curveSethPoolSwapABI,
   curveSUSDPoolSwapABI,
@@ -117,5 +104,11 @@ export default {
   curveLusdSwapABI,
   curveD3poolSwapABI,
   curveMusdSwapABI,
-  ironbankABI
+  ironbankABI,
+  susdfraxbpSwapABI,
+  tusdSwapABI,
+  busdfraxbpSwapABI,
+  alusdfraxbpSwapABI,
+  silofraxSwapABI,
+  tusdfraxbpSwapABI
 }

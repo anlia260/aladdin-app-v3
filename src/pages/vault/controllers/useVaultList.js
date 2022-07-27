@@ -95,7 +95,7 @@ const useVaultList = refreshTrigger => {
           .minus(convexInfo?.curveApys?.baseApy ?? 0)
           .multipliedBy(ctrPrice ?? 1)
           .div(acrvPrice ?? 1)
-          .toFixed(2)
+          .toFixed(3)
 
         const ctrCurrentApy = cBN(parseFloat(baseCurrentApy))
           .minus(convexInfo?.curveApys?.baseApy ?? 0)

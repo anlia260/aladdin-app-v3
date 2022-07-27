@@ -153,10 +153,12 @@ export default function WithdrawModal(props) {
         Fee may be lower after IFO. See <a href="https://docs.aladdin.club/concentrator/ifo-vaults" target="_blank" className='color-white underline'>gitbook</a> for details.
       </div>
       <div className="mt-20 flex items-center gap-1">
-        <span className={styles.harvestHint}>
-          Harvest
-        </span>
-        <Tip placement="top" color="#5ad0ff" title="Harvesting happens periodically without user intervention so normally manual harvest is not necessary.  Triggering a harvest before withdrawal ensures you get the maximum amount, but costs gas and may not be worth it." />
+        <span className={styles.harvestHint}>Harvest</span>
+        <Tip
+          placement="top"
+          color="#5ad0ff"
+          title="Harvesting happens periodically without user intervention so normally manual harvest is not necessary.  Triggering a harvest before withdrawal ensures you get the maximum amount, but costs gas and may not be worth it."
+        />
         <Info name="before withdraw will get" value={`${formatBalance(rewarcAcrv, 18, 6)} CTR`} />
       </div>
       <div className={styles.actions}>
